@@ -49,6 +49,9 @@ function BootStrap_chezmoi {
     curl -sfL https://git.io/chezmoi | sh
     ## Initialize
     ~/bin/chezmoi init https://fargly@github.com/fargly/farglyChezmoi.git
+    #openssl aes-256-cbc -a -salt > keyring_backup.tgz.aes.stdhash.enc
+    ## Hydrate GPG Keyring
+    cat .local/share/chezmoi/outputBin/keyring_backup.tgz.aes.stdhash.enc | openssl aes-256-cbc -d -a | (cd ~/ && tar xzf -)
 
 }
 
@@ -57,8 +60,8 @@ function BootStrap_chezmoi {
 ## MAIN BLOCK
 ################################
 #BootStrap_ansible
-BootStrap_vim 
-BootStrap_sudo
+#BootStrap_vim 
+#BootStrap_sudo
 BootStrap_chezmoi
 
 
