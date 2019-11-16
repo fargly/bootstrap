@@ -44,7 +44,7 @@ nnoremap <silent> <C-l> <C-w>w
 
 function BootStrap_chezmoi {
     ## Add Support
-    sudo apt-get install --assume-yes git curl 2>/dev/null
+    sudo apt-get install --assume-yes git curl gnupg pinentry-curses 2>/dev/null
     ## Install
     curl -sfL https://git.io/chezmoi | sh
     ## Initialize
