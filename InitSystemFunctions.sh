@@ -60,7 +60,12 @@ function BootStrap_chezmoi {
 function BootStrap_zfs {
     sudo apt install -y zfsutils-linux
     sudo apt install -y zfs-fuse
+    sudo apt install -y zfs-dkms
+    sudo apt install -y samba
+    sudo zpool import -f bigmirror
+    sudo zpool import -f bigdata
     sudo zpool status
+
 }
 
 
