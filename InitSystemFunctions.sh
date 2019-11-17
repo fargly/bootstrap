@@ -69,6 +69,14 @@ function BootStrap_zfs {
 }
 
 
+## Bootstrap Home Directory
+function BootStrap_home {
+    ln -s /mnt/data01/BIGDISK/BD1/fargly farglyBD
+    ln -s /mnt/data01/BIGDISK/BD1/fargly/Downloads/ Downloads
+    cat ~/farglyBD/mate-desktop-20191115.cfg | dconf load /opt/mate/
+}
+
+
 ################################
 ## MAIN BLOCK
 ################################
@@ -76,6 +84,7 @@ function BootStrap_zfs {
 #BootStrap_vim 
 #BootStrap_sudo
 #BootStrap_chezmoi
+#BootStrap_home
 
 
 ## EOF
