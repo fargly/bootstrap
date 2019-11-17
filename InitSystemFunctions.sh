@@ -1,24 +1,23 @@
 #!/usr/bin/env bash
 
 
-
+## Modify sudo to NOPASSWORD
 function BootStrap_sudo {
-    ## Modify sudo to NOPASSWORD
     echo "%sudo   ALL=(ALL:ALL) NOPASSWD: ALL" > /tmp/sudogroupperms
     sudo chown root:root /tmp/sudogroupperms
     sudo mv /tmp/sudogroupperms /etc/sudoers.d/sudogroupperms
 }
 
 
-##function BootStrap_ansible {
-##    ## Install Ansible and Invoke Bootstrap Playbook
-##    sudo apt install -y ansible 2>/dev/null
-##    ## Invoke Bootstrap Playbook
-##}
+## Install Ansible and Invoke Bootstrap Playbook
+function BootStrap_ansible {
+    sudo apt install -y ansible 2>/dev/null
+    ## Invoke Bootstrap Playbook
+}
 
 
+## Install Vim and Stub Minimal .vimrc
 function BootStrap_vim {
-    ## Install Vim and Stub Minimal .vimrc
     sudo apt install -y vim 2>/dev/null
     echo "
 filetype off
@@ -42,6 +41,7 @@ nnoremap <silent> <C-l> <C-w>w
 }
 
 
+## Bootstrap Chezmoi
 function BootStrap_chezmoi {
     ## Add Support
     sudo apt-get install --assume-yes git curl gnupg pinentry-curses 2>/dev/null
@@ -56,14 +56,21 @@ function BootStrap_chezmoi {
 }
 
 
+## Bootstrap ZFS and Mount Volumes
+function BootStrap_zfs {
+    sudo apt install -y zfsutils-linux
+    sudo apt install -y zfs-fuse
+    sudo zpool status
+}
+
+
 ################################
 ## MAIN BLOCK
 ################################
 #BootStrap_ansible
 #BootStrap_vim 
 #BootStrap_sudo
-BootStrap_chezmoi
-
+#BootStrap_chezmoi
 
 
 ## EOF
