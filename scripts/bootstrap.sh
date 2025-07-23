@@ -1,7 +1,19 @@
 #!/usr/bin/env bash
 
-curl http://webi.sh | sh
+## Install Webi
+curl https://webi.sh | sh
 
+## Source Environment
+source ~/.config/envman/PATH.env
+
+## Webi Installs: fd ripgrep bat xsv
+for INSTALL in fd ripgrep bat xsv pathman fzf jq yq nerdfonts ;do
+
+
+
+done
 
 
 ## EOF
+
+
