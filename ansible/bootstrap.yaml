@@ -4,11 +4,13 @@
   tasks:
 
   - name: Update apt cache and upgrade packages
+    become: yes
     apt:
       upgrade: yes
       update_cache: yes
 
   - name: Install packages
+    become: yes
     apt:
       name: "{{ packages }}"
     vars:
