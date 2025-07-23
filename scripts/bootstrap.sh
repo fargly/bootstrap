@@ -4,7 +4,7 @@
 curl https://webi.sh | sh
 
 # Source Environment ####################################################### #
-source ~/.config/envman/PATH.env
+. ~/.config/envman/PATH.env   ## Using source failed in this environment
 
 # Webi Installs ############################################################ #
 for INSTALL in fd ripgrep bat xsv pathman fzf jq yq nerdfont ;do
