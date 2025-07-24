@@ -36,9 +36,17 @@
         mode: '0755'
           
 
-    # - name: Clone .tmux
-    #   git:
-    #     repo: https://github.com/gpakosz/.tmux.git
-    #     dest: "{{ ansible_env.HOME }}/.local/opt/tmux"
+    - name: Clone Oh My Tmux!
+      git:
+        repo: https://github.com/gpakosz/.tmux.git
+        dest: "{{ ansible_env.HOME }}/.local/opt/tmux"
 
-        # git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+      git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: "{{ ansible_env.HOME }}/.local/opt/tmux/plugins/tpm"
+
+    - name: Clone Fargly's Bootstrap Repository
+      git:
+        repo: https://github.com/fargly/bootstrap.git
+        dest: "{{ ansible_env.HOME }}/.local/opt/bootstrap"
+
