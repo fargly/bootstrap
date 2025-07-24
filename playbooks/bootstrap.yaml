@@ -81,3 +81,18 @@
 
           ## EOF
         mode: "0755"
+
+    - name: Create ansible-vault script
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.local/bin/ansible-vault"
+        content: |
+          #!/usr/bin/env bash
+          ## uvx based Ansible Vault Launcher v0.1 20250724
+
+          #uvx --from ansible-core ansible-playbook --ask-become-pass
+          #uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
+          ## Note: You may need to add '--ask-vault-pass' in bootstrapping mode
+          uvx --from ansible-core ansible-vault $@
+
+          ## EOF
+        mode: "0755"
