@@ -8,6 +8,7 @@
     apt:
       upgrade: yes
       update_cache: yes
+    tags: privileged
 
   - name: Install packages
     become: yes
@@ -20,6 +21,7 @@
       - dnsutils
       - htop
       - tmux
+    tags: privileged
 
   ## Ensure .local/bin Directory Exists
   - name: Create ~/.local/bin directory
@@ -59,7 +61,7 @@
         ## uvx based Ansible Playbook Launcher v0.1 20250724
         
         #uvx --from ansible-core ansible-playbook --ask-become-pass
-        uvx --from ansible-core ansible-playbook $@
+        uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
 
         ## EOF
       mode: '0755'
