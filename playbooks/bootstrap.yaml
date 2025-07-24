@@ -50,3 +50,31 @@
       repo: https://github.com/fargly/bootstrap.git
       dest: "{{ ansible_env.HOME }}/.local/opt/bootstrap"
 
+  ## Create Local uvx based Ansible Tooling
+  - name: Create ansible-playbook script
+    ansible.builtin.copy:
+      dest:  "{{ ansible_env.HOME }}/.local/bin/ansible-playbook"
+      content: |
+        #!/usr/bin/env bash
+        ## uvx based Ansible Playbook Launcher v0.1 20250724
+        
+        #uvx --from ansible-core ansible-playbook --ask-become-pass
+        uvx --from ansible-core ansible-playbook
+
+        ## EOF
+      mode: '0755'
+
+  - name: Create ansible-playbook-privilege script
+    ansible.builtin.copy:
+      dest:  "{{ ansible_env.HOME }}/.local/bin/ansible-playbook-privilege"
+      content: |
+        #!/usr/bin/env bash
+        ## uvx based Ansible Playbook Launcher v0.1 20250724
+        
+        #uvx --from ansible-core ansible-playbook
+        uvx --from ansible-core ansible-playbook --ask-become-pass
+
+        ## EOF
+      mode: '0755'
+
+        
