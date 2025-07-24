@@ -41,16 +41,19 @@
       ansible.builtin.git:
         repo: https://github.com/gpakosz/.tmux.git
         dest: "{{ ansible_env.HOME }}/.local/opt/tmux"
+      # noqa: latest
 
     - name: Clone TPM Plugin
       ansible.builtin.git:
         repo: https://github.com/tmux-plugins/tpm
         dest: "{{ ansible_env.HOME }}/.local/opt/tmux/plugins/tpm"
+      # noqa: latest
 
     - name: Clone Fargly's Bootstrap Repository
       ansible.builtin.git:
         repo: https://github.com/fargly/bootstrap.git
         dest: "{{ ansible_env.HOME }}/.local/opt/bootstrap"
+      # noqa: latest
 
     ## Create Local uvx based Ansible Tooling
     - name: Create ansible-playbook script
