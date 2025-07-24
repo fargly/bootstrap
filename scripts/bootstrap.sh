@@ -13,8 +13,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 #(cd $HOME/.local/opt && git clone https://github.com/fargly/bootstrap.git || (cd bootstrap && git pull))
 
 # Run Ansible Bootstrap Playbook ########################################### #
-uvx --from ansible-core ansible-playbook $HOME/.local/opt/bootstrap/ansible/bootstrap.yaml 
-uvx --from ansible-core ansible-playbook $HOME/.local/opt/bootstrap/ansible/bootstrap.yaml 
+#uvx --from ansible-core ansible-playbook $HOME/.local/opt/bootstrap/ansible/bootstrap.yaml 
+uvx --from ansible-core ansible-playbook https://raw.githubusercontent.com/fargly/bootstrap/main/ansible/bootstrap.yaml 
 
 
 ## EOF
