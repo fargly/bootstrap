@@ -24,14 +24,14 @@
     tags: privileged
 
   ## Ensure .local/bin Directory Exists
-  - name: Create ~/.local/bin directory
+  - name: Ensure ~/.local/bin directory
     ansible.builtin.file:
       path: "{{ ansible_env.HOME }}/.local/bin"
       state: directory
       mode: '0755'
         
   ## Ensure .local/opt Directory Exists
-  - name: Create ~/.local/opt directory
+  - name: Ensure ~/.local/opt directory
     ansible.builtin.file:
       path: "{{ ansible_env.HOME }}/.local/opt"
       state: directory
