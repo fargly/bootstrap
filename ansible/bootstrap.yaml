@@ -3,42 +3,42 @@
   connection: local
   tasks:
 
-  - name: Update apt cache and upgrade packages
-    become: yes
-    apt:
-      upgrade: yes
-      update_cache: yes
+    - name: Update apt cache and upgrade packages
+      become: yes
+      apt:
+        upgrade: yes
+        update_cache: yes
 
-  - name: Install packages
-    become: yes
-    apt:
-      name: "{{ packages }}"
-    vars:
-      packages:
-      - bash-completion
-      - binutils
-      - dnsutils
-      - htop
-      - tmux
+    - name: Install packages
+      become: yes
+      apt:
+        name: "{{ packages }}"
+      vars:
+        packages:
+        - bash-completion
+        - binutils
+        - dnsutils
+        - htop
+        - tmux
 
-  ## Ensure .local/bin Directory Exists
-  - name: Create ~/.local/bin directory
-    ansible.builtin.file:
-      path: "{{ ansible_env.HOME }}/.local/bin"
-      state: directory
-      mode: '0755'
-        
-  ## Ensure .local/opt Directory Exists
-  - name: Create ~/.local/opt directory
-    ansible.builtin.file:
-      path: "{{ ansible_env.HOME }}/.local/opt"
-      state: directory
-      mode: '0755'
-        
+    ## Ensure .local/bin Directory Exists
+    - name: Create ~/.local/bin directory
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.local/bin"
+        state: directory
+        mode: '0755'
+          
+    ## Ensure .local/opt Directory Exists
+    - name: Create ~/.local/opt directory
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.local/opt"
+        state: directory
+        mode: '0755'
+          
 
-  # - name: Clone .tmux
-  #   git:
-  #     repo: https://github.com/gpakosz/.tmux.git
-  #     dest: "{{ ansible_env.HOME }}/.local/opt/tmux"
+    # - name: Clone .tmux
+    #   git:
+    #     repo: https://github.com/gpakosz/.tmux.git
+    #     dest: "{{ ansible_env.HOME }}/.local/opt/tmux"
 
-      # git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+        # git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm

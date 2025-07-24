@@ -14,7 +14,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Run Ansible Bootstrap Playbook ########################################### #
 #uvx --from ansible-core ansible-playbook $HOME/.local/opt/bootstrap/ansible/bootstrap.yaml 
-uvx --from ansible-core ansible-playbook https://raw.githubusercontent.com/fargly/bootstrap/main/ansible/bootstrap.yaml 
+# uvx --from ansible-core ansible-playbook https://raw.githubusercontent.com/fargly/bootstrap/main/ansible/bootstrap.yaml 
+curl https://raw.githubusercontent.com/fargly/bootstrap/main/ansible/bootstrap.yaml | \
+    uvx --from ansible-core ansible-playbook --ask-become-pass /dev/stdin
 
 
 ## EOF
