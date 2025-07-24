@@ -59,7 +59,7 @@
         ## uvx based Ansible Playbook Launcher v0.1 20250724
         
         #uvx --from ansible-core ansible-playbook --ask-become-pass
-        uvx --from ansible-core ansible-playbook
+        uvx --from ansible-core ansible-playbook $@
 
         ## EOF
       mode: '0755'
@@ -72,7 +72,7 @@
         ## uvx based Ansible Playbook Launcher v0.1 20250724
         
         #uvx --from ansible-core ansible-playbook
-        uvx --from ansible-core ansible-playbook --ask-become-pass
+        uvx --from ansible-core ansible-playbook --ask-become-pass $@
 
         ## EOF
       mode: '0755'
