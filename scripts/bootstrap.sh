@@ -7,7 +7,7 @@ mkdir -p $HOME/.local/bin
 
 # 'uv' Install ############################################################# #
 curl -LsSf https://astral.sh/uv/install.sh | sh
-. $HOME/.bashrc
+export PATH="$HOME/.local/bin:$PATH"
 
 # Clone 'bootstrap' Repository ############################################# #
 # curl https://api.github.com/users/fargly/keys | jq blahblah >> $HOME/.ssh/authorized_keys
