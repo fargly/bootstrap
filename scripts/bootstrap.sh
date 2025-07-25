@@ -7,7 +7,6 @@ mkdir -p $HOME/.local/bin
 
 # 'uv' Install ############################################################# #
 curl -LsSf https://astral.sh/uv/install.sh | sh
-export PATH="$HOME/.local/bin:$PATH"
 
 # Clone 'bootstrap' Repository ############################################# #
 # curl https://api.github.com/users/fargly/keys | jq blahblah >> $HOME/.ssh/authorized_keys
@@ -17,7 +16,7 @@ export PATH="$HOME/.local/bin:$PATH"
 #uvx --from ansible-core ansible-playbook $HOME/.local/opt/bootstrap/ansible/bootstrap.yaml 
 # uvx --from ansible-core ansible-playbook https://raw.githubusercontent.com/fargly/bootstrap/main/ansible/bootstrap.yaml 
 curl https://raw.githubusercontent.com/fargly/bootstrap/main/playbooks/bootstrap.yaml | \
-    uvx --from ansible-core ansible-playbook --ask-become-pass /dev/stdin
+    $HOME/.local/bin/uvx --from ansible-core ansible-playbook --ask-become-pass /dev/stdin
 
 
 ## EOF
