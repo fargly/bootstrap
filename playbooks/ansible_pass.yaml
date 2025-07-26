@@ -1,0 +1,31 @@
+# This is NOT meant to capture the *initial* prompt for the current playbook run
+# It's an example of a setup playbook that would *receive* a password
+# (e.g., via an extra var or environment variable) to write to a file for future runs.
+
+- name: Securely set up vault password file
+  hosts: localhost # Or your target host if setting up for that host
+  connection: local # Or ssh if setting up remotely
+
+  vars_files:
+    - secrets.yaml.vault # This line tells Ansible to load variables from vault.yml
+
+  tasks:
+    - name: Create .vault_pass.txt file
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.vault_pass.txt"
+        content: "{{ vault_password_content }}"
+        mode: '0600'
+      no_log: true
+
+    - name: Create ~/.ansible.cfg file
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.ansible.cfg"
+        content: | 
+          [defaults]
+          vault_password_file = ~/.vault_pass.txt
+        mode: '0600' # Essential for security
+      no_log: true
+      run_once: true
+
+
+
