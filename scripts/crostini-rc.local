@@ -1,0 +1,27 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+echo "Running rc.local $(date)" >> /home/kurtdanielson/rc-local.log
+
+oldname="$(getent passwd 1000 | awk -F: '{print $1}')" 
+newname="fargly"
+
+if [ "$oldname" != "$newname" ];then
+	sudo pkill -9 -u $oldname
+	sudo groupmod -n $newname $oldname
+	sudo usermod -d /home/$newname -l $newname -m -c $newname $oldname
+fi
+
+
+
+exit 0

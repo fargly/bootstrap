@@ -1,0 +1,9 @@
+oldname="$(getent passwd 1000 | awk -F: '{print $1}')" 
+newname="fargly"
+
+if [ "$oldname" != "$newname" ];then
+	sudo pkill -9 -u $oldname
+	sudo groupmod -n $newname $oldname
+	sudo usermod -d /home/$newname -l $newname -m -c $newname $oldname
+fi
+
