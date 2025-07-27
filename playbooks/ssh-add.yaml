@@ -1,0 +1,50 @@
+---
+- name: Add SSH key from Vault to ssh-agent
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - secrets.yaml.vault # This line tells Ansible to load variables from vault.yml
+
+  tasks:
+    - name: Check if ssh-agent is running
+      ansible.builtin.command: /usr/bin/ssh-add -l
+      register: ssh_add_check
+      ignore_errors: true
+      changed_when: false
+      failed_when: ssh_add_check.rc not in [0, 1] # 0 = agent running+keys, 1 = agent running+no keys
+
+    - name: Fail if ssh-agent is not running
+      ansible.builtin.fail:
+        msg: "ssh-agent does not appear to be running or is not accessible. Please ensure it's running and SSH_AUTH_SOCK is set."
+      when: ssh_add_check.rc == 2 # ssh-add returns 2 if agent is not running
+
+    - name: Add the SSH key to ssh-agent from Vault
+      # We use 'shell' because 'command' does not support piping directly.
+      # The key content is passed securely via stdin using '{{ my_ssh_private_key | quote }}'
+      # and the 'echo' command. 'ssh-add -' reads from stdin.
+      ansible.builtin.shell: |
+        set -o pipefail
+        echo "{{ ssh_private_key }}" | ssh-add -
+      # args:
+        # Prevents shell from being marked as changed just because output varies
+        # This task will only be marked changed if ssh-add returns 0
+        # creates: /dev/null # This is a placeholder, actual state change is from ssh-add
+      register: add_key_result
+      changed_when: add_key_result.rc == 0
+      failed_when: add_key_result.rc != 0
+      no_log: true # Crucial: Prevent the key content from appearing in logs
+
+    - name: Display ssh-add output (only if successful)
+      ansible.builtin.debug:
+        var: add_key_result.stdout_lines
+      when: add_key_result.changed or add_key_result.rc == 0
+
+    - name: Verify key is added
+      ansible.builtin.command: /usr/bin/ssh-add -l
+      register: verify_add
+      changed_when: false
+
+    - name: Display currently loaded keys
+      ansible.builtin.debug:
+        var: verify_add.stdout_lines

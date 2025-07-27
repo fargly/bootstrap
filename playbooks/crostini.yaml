@@ -1,0 +1,98 @@
+---
+- name: Bootstrap local development environment
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+    - name: Update apt cache and upgrade packages
+      become: true
+      ansible.builtin.apt:
+        upgrade: true
+        update_cache: true
+      tags: privileged
+
+    - name: Install packages
+      become: true
+      ansible.builtin.apt:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - bash-completion
+          - binutils
+          - dnsutils
+          - htop
+          - tmux
+      tags: privileged
+
+    ## Ensure .local/bin Directory Exists
+    - name: Ensure ~/.local/bin directory
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.local/bin"
+        state: directory
+        mode: "0755"
+
+    ## Ensure .local/opt Directory Exists
+    - name: Ensure ~/.local/opt directory
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.local/opt"
+        state: directory
+        mode: "0755"
+
+    - name: Clone Oh My Tmux!
+      ansible.builtin.git:
+        repo: https://github.com/gpakosz/.tmux.git
+        dest: "{{ ansible_env.HOME }}/.local/opt/tmux"
+      # noqa: latest
+
+    - name: Clone TPM Plugin
+      ansible.builtin.git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: "{{ ansible_env.HOME }}/.local/opt/tmux/plugins/tpm"
+      # noqa: latest
+
+    - name: Clone Fargly's Bootstrap Repository
+      ansible.builtin.git:
+        repo: https://github.com/fargly/bootstrap.git
+        dest: "{{ ansible_env.HOME }}/.local/opt/bootstrap"
+      # noqa: latest
+
+    ## Create Local uvx based Ansible Tooling
+    - name: Create ansible-playbook script
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.local/bin/ansible-playbook"
+        content: |
+          #!/usr/bin/env bash
+          ## uvx based Ansible Playbook Launcher v0.1 20250724
+
+          #uvx --from ansible-core ansible-playbook --ask-become-pass
+          uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
+
+          ## EOF
+        mode: "0755"
+
+    - name: Create ansible-playbook-privilege script
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.local/bin/ansible-playbook-privilege"
+        content: |
+          #!/usr/bin/env bash
+          ## uvx based Ansible Playbook Launcher v0.1 20250724
+
+          #uvx --from ansible-core ansible-playbook
+          uvx --from ansible-core ansible-playbook --ask-become-pass $@
+
+          ## EOF
+        mode: "0755"
+
+    - name: Create ansible-vault script
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.local/bin/ansible-vault"
+        content: |
+          #!/usr/bin/env bash
+          ## uvx based Ansible Vault Launcher v0.1 20250724
+
+          #uvx --from ansible-core ansible-playbook --ask-become-pass
+          #uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
+          ## Note: You may need to add '--ask-vault-pass' in bootstrapping mode
+          uvx --from ansible-core ansible-vault $@
+
+          ## EOF
+        mode: "0755"

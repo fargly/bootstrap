@@ -16,16 +16,14 @@
         content: "{{ vault_password_content }}"
         mode: '0600'
       no_log: true
+      register: vault_pass_result
 
-    - name: Create ~/.ansible.cfg file
+    - name: Create .ansible.cfg file
       ansible.builtin.copy:
         dest: "{{ ansible_env.HOME }}/.ansible.cfg"
-        content: | 
+        content: |
           [defaults]
           vault_password_file = ~/.vault_pass.txt
         mode: '0600' # Essential for security
       no_log: true
-      run_once: true
-
-
-
+      when: not vault_pass_result.failed
