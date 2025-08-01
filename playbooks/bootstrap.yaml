@@ -97,8 +97,8 @@
           ## EOF
         mode: "0755"
 
-    - name: Remove the PermitRootLogin line
+    - name: Remove the env file line
       ansible.builtin.lineinfile:
         path: "{{ ansible_env.HOME }}/.bashrc"
-        regexp: '. "$HOME/.local/bin/env"'
+        regexp: '^. "$HOME/.local/bin/env"$'
         state: absent
