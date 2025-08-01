@@ -9,26 +9,70 @@
   gather_facts: true
 
   vars:
-    utility_list:
-      - rg
-      - fd
-      - fzf
-      - bat
-      - jq
-      - aliasman
-      - lsd
-      - pathman
-      - serviceman
-      - shfmt
-      - xsv
-      - yq
-      # - bun
+    standard_webi_path: "{{ ansible_env.HOME }}/.local/bin"
+    bun_path: "{{ ansible_env.HOME }}/.local/opt/bun/bin"
+
+    utilities:
+      ripgrep:
+        name: rg
+        installpath: "{{ standard_webi_path }}"
+      fd:
+        name: fd
+        installpath: "{{ standard_webi_path }}"
+      fzf:
+        name: fzf
+        installpath: "{{ standard_webi_path }}"
+      bat:
+        name: bat
+        installpath: "{{ standard_webi_path }}"
+      jq:
+        name: jq
+        installpath: "{{ standard_webi_path }}"
+      aliasman:
+        name: aliasman
+        installpath: "{{ standard_webi_path }}"
+      lsd:
+        name: lsd
+        installpath: "{{ standard_webi_path }}"
+      pathman:
+        name: pathman
+        installpath: "{{ standard_webi_path }}"
+      serviceman:
+        name: serviceman
+        installpath: "{{ standard_webi_path }}"
+      shfmt:
+        name: shfmt
+        installpath: "{{ standard_webi_path }}"
+      xsv:
+        name: xsv
+        installpath: "{{ standard_webi_path }}"
+      yq:
+        name: yq
+        installpath: "{{ standard_webi_path }}"
+      bun:
+        name: bun
+        installpath: "{{ bun_path }}"
+
+    # utility_list:
+    #   - rg
+    #   - fd
+    #   - fzf
+    #   - bat
+    #   - jq
+    #   - aliasman
+    #   - lsd
+    #   - pathman
+    #   - serviceman
+    #   - shfmt
+    #   - xsv
+    #   - yq
+    #   - bun
 
   tasks:
     - name: Check for the existence of each file
       ansible.builtin.stat:
-        path: "{{ ansible_env.HOME }}/.local/bin/{{ item }}"
-      loop: "{{ utility_list }}"
+        path: "{{ item.installpath }}/{{ item.name }}"
+      loop: "{{ utilities }}"
       register: utility_check_results
 
     - name: Run a "fix task" for non-existent files with webtask
