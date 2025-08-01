@@ -10,7 +10,7 @@
 
   vars:
     utility_list:
-      - ripgrep
+      - rg
       - fd
       - fzf
       - bat
@@ -22,7 +22,7 @@
       - shfmt
       - xsv
       - yq
-      - bun
+      # - bun
 
   tasks:
     - name: Check for the existence of each file
