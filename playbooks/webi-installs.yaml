@@ -1,24 +1,28 @@
 ---
+
+- name: Import webi Playbook
+  ansible.builtin.import_playbook: webi.yaml
+
 # Main playbook: checks for file existence and conditionally runs a setup playbook.
 - name: Conditional File Setup
   hosts: localhost
-  gather_facts: false # Not needed for this simple example
+  gather_facts: true
 
   tasks:
-    - name: Check for the existence of ~/.local/bin/webi
-      # The 'stat' module checks a file's status and stores the result in a variable.
-      # We use 'register' to save the output of this task.
-      ansible.builtin.stat:
-        path: "{{ ansible_env.HOME }}/.local/bin/webi"
-      register: webi_stat
+    # - name: Check for the existence of ~/.local/bin/webi
+    #   # The 'stat' module checks a file's status and stores the result in a variable.
+    #   # We use 'register' to save the output of this task.
+    #   ansible.builtin.stat:
+    #     path: "{{ ansible_env.HOME }}/.local/bin/webi"
+    #   register: webi_stat
 
-    - name: Run setup playbook if fileX does not exist
-      # 'include_playbook' allows us to dynamically include another playbook.
-      # The 'when' condition ensures this task only runs if the file was not found.
-      # ansible.builtin.include_tasks: webi.yaml
-      ansible.builtin.debug:
-        msg: "The file 'webi' does not exist. Continuing with the main playbook."
-      when: not webi_stat.stat.exists
+    # - name: Run setup playbook if fileX does not exist
+    #   # 'include_playbook' allows us to dynamically include another playbook.
+    #   # The 'when' condition ensures this task only runs if the file was not found.
+    #   # ansible.builtin.include_tasks: webi.yaml
+    #   ansible.builtin.debug:
+    #     msg: "The file 'webi' does not exist. Continuing with the main playbook."
+    #   when: not webi_stat.stat.exists
 
     - name: Report success and continue with other tasks
       # This task will run regardless of whether the setup playbook was included or not,
