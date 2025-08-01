@@ -103,14 +103,18 @@
         regexp: '^.*/.local/bin/env.*$'
         state: absent
 
-    - name: Add basic bashrc items (set -o vi)
+    - name: Add basic bashrc items
       ansible.builtin.lineinfile:
         path: "{{ ansible_env.HOME }}/.bashrc"
-        line: 'set -o vi'
+        line: |
+
+          set -o vi
+          export EDITOR=vim
+
         state: present
 
-    - name: Add basic bashrc items (export EDITOR)
-      ansible.builtin.lineinfile:
-        path: "{{ ansible_env.HOME }}/.bashrc"
-        line: 'export EDITOR=vim'
-        state: present
+    # - name: Add basic bashrc items (export EDITOR)
+    #   ansible.builtin.lineinfile:
+    #     path: "{{ ansible_env.HOME }}/.bashrc"
+    #     line: 'export EDITOR=vim'
+    #     state: present
