@@ -1,98 +1,51 @@
 ---
-- name: Bootstrap local development environment
-  hosts: 127.0.0.1
-  connection: local
+# This playbook checks for a user with a specific UID and GID, and
+# renames the user if the username does not match the desired name.
+- name: Ensure user with UID 1000 is named 'fargly'
+  hosts: all
+  become: yes # Use privilege escalation to run tasks as root
+
+  vars:
+    desired_user_name: 'fargly'
+    user_id_to_check: 1000
+
   tasks:
-    - name: Update apt cache and upgrade packages
-      become: true
-      ansible.builtin.apt:
-        upgrade: true
-        update_cache: true
-      tags: privileged
+    # Task 1: Check if a user with the specified UID exists.
+    # The `getent` command queries the user database.
+    # We register the output to a variable named `getent_user`.
+    - name: Get user information for UID {{ user_id_to_check }}
+      ansible.builtin.command: "getent passwd {{ user_id_to_check }}"
+      register: getent_user
+      failed_when: getent_user.rc not in [0, 2] # RC 0 is success, RC 2 means not found
+      changed_when: false # This task doesn't change anything
 
-    - name: Install packages
-      become: true
-      ansible.builtin.apt:
-        name: "{{ packages }}"
-      vars:
-        packages:
-          - bash-completion
-          - binutils
-          - dnsutils
-          - htop
-          - tmux
-      tags: privileged
+    # Task 2: Check the username and conditionally rename it.
+    # This task will only run if a user was found (rc == 0) and the
+    # current username does not match our desired name.
+    - name: Rename user to '{{ desired_user_name }}' if UID {{ user_id_to_check }} exists with a different name
+      ansible.builtin.user:
+        name: "{{ desired_user_name }}"
+        uid: "{{ user_id_to_check }}"
+        # Set gid to the same as uid, as is common for user accounts.
+        # This will also ensure the group is created/updated if needed.
+        group: "{{ user_id_to_check }}" 
+        state: present
+        append: yes # Ensure the user is not removed from other groups
+      when: >
+        getent_user.rc == 0 and
+        (getent_user.stdout_lines[0].split(':')[0] != desired_user_name)
 
-    ## Ensure .local/bin Directory Exists
-    - name: Ensure ~/.local/bin directory
-      ansible.builtin.file:
-        path: "{{ ansible_env.HOME }}/.local/bin"
-        state: directory
-        mode: "0755"
+    # Optional Task 3: Inform the user if no change was needed.
+    - name: User is already named '{{ desired_user_name }}'
+      ansible.builtin.debug:
+        msg: "User with UID {{ user_id_to_check }} is already named '{{ desired_user_name }}'. No changes were made."
+      when: >
+        getent_user.rc == 0 and
+        (getent_user.stdout_lines[0].split(':')[0] == desired_user_name)
 
-    ## Ensure .local/opt Directory Exists
-    - name: Ensure ~/.local/opt directory
-      ansible.builtin.file:
-        path: "{{ ansible_env.HOME }}/.local/opt"
-        state: directory
-        mode: "0755"
+    # Optional Task 4: Inform the user if the UID was not found.
+    - name: User with UID {{ user_id_to_check }} was not found
+      ansible.builtin.debug:
+        msg: "No user found with UID {{ user_id_to_check }}. No changes were made."
+      when: getent_user.rc != 0
 
-    - name: Clone Oh My Tmux!
-      ansible.builtin.git:
-        repo: https://github.com/gpakosz/.tmux.git
-        dest: "{{ ansible_env.HOME }}/.local/opt/tmux"
-      # noqa: latest
-
-    - name: Clone TPM Plugin
-      ansible.builtin.git:
-        repo: https://github.com/tmux-plugins/tpm
-        dest: "{{ ansible_env.HOME }}/.local/opt/tmux/plugins/tpm"
-      # noqa: latest
-
-    - name: Clone Fargly's Bootstrap Repository
-      ansible.builtin.git:
-        repo: https://github.com/fargly/bootstrap.git
-        dest: "{{ ansible_env.HOME }}/.local/opt/bootstrap"
-      # noqa: latest
-
-    ## Create Local uvx based Ansible Tooling
-    - name: Create ansible-playbook script
-      ansible.builtin.copy:
-        dest: "{{ ansible_env.HOME }}/.local/bin/ansible-playbook"
-        content: |
-          #!/usr/bin/env bash
-          ## uvx based Ansible Playbook Launcher v0.1 20250724
-
-          #uvx --from ansible-core ansible-playbook --ask-become-pass
-          uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
-
-          ## EOF
-        mode: "0755"
-
-    - name: Create ansible-playbook-privilege script
-      ansible.builtin.copy:
-        dest: "{{ ansible_env.HOME }}/.local/bin/ansible-playbook-privilege"
-        content: |
-          #!/usr/bin/env bash
-          ## uvx based Ansible Playbook Launcher v0.1 20250724
-
-          #uvx --from ansible-core ansible-playbook
-          uvx --from ansible-core ansible-playbook --ask-become-pass $@
-
-          ## EOF
-        mode: "0755"
-
-    - name: Create ansible-vault script
-      ansible.builtin.copy:
-        dest: "{{ ansible_env.HOME }}/.local/bin/ansible-vault"
-        content: |
-          #!/usr/bin/env bash
-          ## uvx based Ansible Vault Launcher v0.1 20250724
-
-          #uvx --from ansible-core ansible-playbook --ask-become-pass
-          #uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
-          ## Note: You may need to add '--ask-vault-pass' in bootstrapping mode
-          uvx --from ansible-core ansible-vault $@
-
-          ## EOF
-        mode: "0755"
