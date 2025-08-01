@@ -71,8 +71,8 @@
   tasks:
     - name: Check for the existence of each file
       ansible.builtin.stat:
-        path: "{{ item.installpath }}/{{ item.name }}"
-      loop: "{{ utilities }}"
+        path: "{{ item.value.installpath }}/{{ item.value.name }}"
+      loop: "{{ utilities | dict2items }}"
       register: utility_check_results
 
     - name: Run a "fix task" for non-existent files with webtask
