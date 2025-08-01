@@ -100,5 +100,5 @@
     - name: Remove the env file line
       ansible.builtin.lineinfile:
         path: "{{ ansible_env.HOME }}/.bashrc"
-        regexp: '^. "$HOME/.local/bin/env"$'
+        regexp: '^.*/.local/bin/env.*$'
         state: absent
