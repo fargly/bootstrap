@@ -77,7 +77,8 @@
 
     - name: Show all utility_check_results
       ansible.builtin.debug:
-        var: utility_check_results
+        var: item
+      loop: "{{ utility_check_results.results }}"
 
     # - name: Run a "fix task" for non-existent files with webtask
     #   ansible.builtin.command: "{{ ansible_env.HOME }}/.local/bin/webi {{ item.item }}"
