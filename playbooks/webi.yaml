@@ -38,6 +38,10 @@
       ansible.builtin.debug:
         var: script_output.stdout_lines
 
+    - name: Run 'envman' load.sh Script
+      ansible.builtin.command: "{{ ansible_env.HOME }}/.config/envman/load.sh"
+      changed_when: true
+
     - name: Remove temporary script if present
       ansible.builtin.file:
         path: "{{ temp_script_path }}"
