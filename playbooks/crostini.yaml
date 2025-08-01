@@ -19,31 +19,34 @@
       failed_when: getent_user.rc not in [0, 2] # RC 0 is success, RC 2 means not found
       changed_when: false # This task doesn't change anything
 
-    # Task 2: Check the username and conditionally rename it.
-    # This task will only run if a user was found (rc == 0) and the
-    # current username does not match our desired name.
-    - name: Rename user to '{{ desired_user_name }}' if UID {{ user_id_to_check }} exists with a different name
+    # Task 2: Set a fact for the current username, if found.
+    - name: Extract the current username
+      ansible.builtin.set_fact:
+        current_user_name: "{{ getent_user.stdout_lines[0].split(':')[0] }}"
+      when: getent_user.rc == 0
+
+    # Task 3: Conditionally rename the user.
+    # This task will only run if a user was found and the current username
+    # does not match our desired name.
+    - name: Rename user '{{ current_user_name }}' to '{{ desired_user_name }}'
       ansible.builtin.user:
-        name: "{{ desired_user_name }}"
+        name: "{{ current_user_name }}"
+        new_name: "{{ desired_user_name }}"
         uid: "{{ user_id_to_check }}"
-        # Set gid to the same as uid, as is common for user accounts.
-        # This will also ensure the group is created/updated if needed.
-        group: "{{ user_id_to_check }}" 
         state: present
-        append: yes # Ensure the user is not removed from other groups
       when: >
         getent_user.rc == 0 and
-        (getent_user.stdout_lines[0].split(':')[0] != desired_user_name)
+        current_user_name != desired_user_name
 
-    # Optional Task 3: Inform the user if no change was needed.
+    # Optional Task 4: Inform the user if no change was needed.
     - name: User is already named '{{ desired_user_name }}'
       ansible.builtin.debug:
         msg: "User with UID {{ user_id_to_check }} is already named '{{ desired_user_name }}'. No changes were made."
       when: >
         getent_user.rc == 0 and
-        (getent_user.stdout_lines[0].split(':')[0] == desired_user_name)
+        current_user_name == desired_user_name
 
-    # Optional Task 4: Inform the user if the UID was not found.
+    # Optional Task 5: Inform the user if the UID was not found.
     - name: User with UID {{ user_id_to_check }} was not found
       ansible.builtin.debug:
         msg: "No user found with UID {{ user_id_to_check }}. No changes were made."
