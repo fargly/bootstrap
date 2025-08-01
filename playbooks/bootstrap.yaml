@@ -21,6 +21,7 @@
           - dnsutils
           - htop
           - tmux
+          - unzip
       tags: privileged
 
     ## Ensure .local/bin Directory Exists
