@@ -14,8 +14,15 @@
       - fd
       - fzf
       - bat
-      - bun
       - jq
+      - aliasman
+      - lsd
+      - pathman
+      - serviceman
+      - shfmt
+      - xsv
+      - yq
+      - bun
 
   tasks:
     - name: Check for the existence of each file
