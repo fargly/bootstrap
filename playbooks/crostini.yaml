@@ -2,7 +2,7 @@
 # This playbook checks for a user with a specific UID and GID, and
 # renames the user if the username does not match the desired name.
 - name: Ensure user with UID 1000 is named 'fargly'
-  hosts: all
+  hosts: localhost
   become: yes # Use privilege escalation to run tasks as root
 
   vars:
