@@ -41,5 +41,5 @@
 
     - name: Install utilites using webi
       ansible.builtin.command: "echo {{ item }}"
-      loop: "{{ my_list }}"
+      loop: "{{ utility_list }}"
       changed_when: true
