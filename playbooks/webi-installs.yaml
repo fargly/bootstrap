@@ -8,6 +8,15 @@
   hosts: localhost
   gather_facts: true
 
+  vars:
+    utility_list:
+      - ripgrep
+      - fd
+      - fzf
+      - bat
+      - bun
+      - jq
+
   tasks:
     # - name: Check for the existence of ~/.local/bin/webi
     #   # The 'stat' module checks a file's status and stores the result in a variable.
@@ -29,3 +38,8 @@
       # demonstrating the playbook continues after the conditional step.
       ansible.builtin.debug:
         msg: "The file 'webi' now exists. Continuing with the main playbook."
+
+    - name: Install utilites using webi
+      ansible.builtin.command: "echo {{ item }}"
+      loop: "{{ my_list }}"
+      changed_when: true
