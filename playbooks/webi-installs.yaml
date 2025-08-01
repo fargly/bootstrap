@@ -23,3 +23,8 @@
         path: "{{ ansible_env.HOME }}/.local/bin/{{ item }}"
       loop: "{{ utility_list }}"
       register: utility_check_results
+
+    - name: Run a "fix task" for non-existent files with webtask
+      ansible.builtin.command: "{{ ansible_env.HOME }}/.local/bin/webi {{ item.item }}"
+      loop: "{{ file_check_results.results }}"
+      changed_when: not item.stat.exists
