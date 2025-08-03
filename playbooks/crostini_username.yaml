@@ -21,7 +21,7 @@
       failed_when: sommelier_status.rc not in [0, 1]
 
     - name: Get for Username Data
-      ansible.builtin.command: "getent passwd {{ user_id_to_check }}"
+      ansible.builtin.command: "getent passwd {{ id_to_check }}"
       register: getent_user
       failed_when: getent_user.rc not in [0, 2]
       changed_when: false
@@ -34,7 +34,7 @@
     - name: Report current username if Linux and sommelier is running
       ansible.builtin.debug:
         msg: "Current username is: {{ current_user_name }} on a Crostini container."
-      when: sommelier_status.rc == 0 and ansible_facts['system']
+      when: sommelier_status.rc == 0 and ansible_facts['system'] == 'Linux'
 
     # - name: Report if sommelier is running
     #   ansible.builtin.debug:
