@@ -10,7 +10,7 @@
 ## Start Container
 ############################################
 
-echo "Running rc.local $(date)" >> /home/kurtdanielson/rc-local.log
+echo "Running rc.local $(date)" >> /tmp/rc-local.log
 
 oldname="$(getent passwd 1000 | awk -F: '{print $1}')" 
 newname="fargly"
@@ -20,7 +20,5 @@ if [ "$oldname" != "$newname" ];then
 	sudo groupmod -n $newname $oldname
 	sudo usermod -d /home/$newname -l $newname -m -c $newname $oldname
 fi
-
-
 
 exit 0

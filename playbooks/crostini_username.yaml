@@ -1,7 +1,7 @@
 ---
 - name: Ensure user and group with ID 1000 are named 'fargly' on Crostini Containers
   hosts: localhost
-  # become: true
+  become: true
   gather_facts: true
 
   vars:
@@ -38,50 +38,43 @@
       ansible.builtin.meta: end_play
       when: current_user_name == desired_user_name
 
-    # # Task 3: Extract the current username, if found.
-    # - name: Extract the current username
-    #   ansible.builtin.set_fact:
-    #     current_user_name: "{{ getent_user.stdout_lines[0].split(':')[0] }}"
-    #   when: getent_user.rc == 0
+    - name: Create rc.local file
+      ansible.builtin.copy:
+        dest: "/etc/rc.local"
+        content: |
+          #!/bin/sh -e
+          #
+          # rc.local
+          #
+          ############################################
+          ## sudo cp crostini-rc.local /etc/rc.local
+          ## sudo chmod +x /etc/rc.local
+          ## sudo systemctl start rc-local
+          ## Stop Container in Developer Settings/Manage Extra Containers
+          ## Start Container
+          ############################################
 
-    # # Task 4: Extract the current group name, if found.
-    # - name: Extract the current group name
-    #   ansible.builtin.set_fact:
-    #     current_group_name: "{{ getent_group.stdout_lines[0].split(':')[0] }}"
-    #   when: getent_group.rc == 0
+          echo "Running rc.local $(date)" >> /tmp/rc-local.log
 
-    # # Task 5: Conditionally rename the group using the groupmod command.
-    # - name: Rename group '{{ current_group_name }}' to '{{ desired_user_name }}'
-    #   ansible.builtin.command: "groupmod -n {{ desired_user_name }} {{ current_group_name }}"
-    #   register: groupmod_result
+          oldname="$(getent passwd 1000 | awk -F: '{print $1}')"
+          newname="fargly"
+
+          if [ "$oldname" != "$newname" ];then
+            sudo pkill -9 -u $oldname
+            sudo groupmod -n $newname $oldname
+            sudo usermod -d /home/$newname -l $newname -m -c $newname $oldname
+          fi
+
+          exit 0
+        mode: "0755"
+
+    - name: Invoke rc.local to change user name
+      ansible.builtin.systemd:
+        name: rc-local
+        state: started
+      # changed_when: true
+
+    # - name: Invoke rc.local to change user name
+    #   ansible.builtin.command: "systemctl start rc-local"
+    #   register: rc_local_start
     #   changed_when: true
-    #   failed_when: groupmod_result.rc != 0
-    #   when: >
-    #     getent_group.rc == 0 and
-    #     current_group_name != desired_user_name
-
-    # # Task 6: Conditionally rename the user using the usermod command.
-    # # This also sets the user's primary group to the new name.
-    # - name: Rename user '{{ current_user_name }}' to '{{ desired_user_name }}' and set primary group
-    #   ansible.builtin.command: "usermod -l {{ desired_user_name }} -g {{ desired_user_name }} {{ current_user_name }}"
-    #   register: usermod_result
-    #   changed_when: true
-    #   failed_when: usermod_result.rc != 0
-    #   when: >
-    #     getent_user.rc == 0 and
-    #     current_user_name != desired_user_name
-
-    # # Optional Task 7: Inform the user if the user/group were already correct.
-    # - name: User and group are already named '{{ desired_user_name }}'
-    #   ansible.builtin.debug:
-    #     msg: "User and group with ID {{ id_to_check }} are already named '{{ desired_user_name }}'. No changes were made."
-    #   when: >
-    #     getent_user.rc == 0 and getent_group.rc == 0 and
-    #     current_user_name == desired_user_name and
-    #     current_group_name == desired_user_name
-
-    # # Optional Task 8: Inform the user if the ID was not found for both.
-    # - name: User or group with ID {{ id_to_check }} was not found
-    #   ansible.builtin.debug:
-    #     msg: "No user or group found with ID {{ id_to_check }}. No changes were made."
-    #   when: getent_user.rc != 0 or getent_group.rc != 0
