@@ -21,6 +21,10 @@
       changed_when: false
       failed_when: sommelier_status.rc not in [0, 1]
 
+    - name: sommelier status
+      ansible.builtin.debug:
+        sommelier_status: "{{ sommelier_status }}"
+
     - name: Set Crostini Variable
       ansible.builtin.set_fact:
         crostini: true
