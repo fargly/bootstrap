@@ -1,7 +1,7 @@
 ---
 - name: Ensure user and group with ID 1000 are named 'fargly' on Crostini Containers
   hosts: localhost
-  #become: true
+  # become: true
   gather_facts: true
 
   vars:
@@ -9,24 +9,42 @@
     id_to_check: 1000
 
   tasks:
+    - name: End the play on hosts that are not Linux
+      ansible.builtin.meta: end_play
+      when: not ansible_facts['system'] == "Linux"
+
     - name: Check for Sommelier Process
-      #ansible.builtin.command: "pgrep -f sommelier"
       ansible.builtin.shell: pgrep -f sommelier > /dev/null 2>&1
       register: sommelier_status
       ignore_errors: true
       changed_when: false
       failed_when: sommelier_status.rc not in [0, 1]
-      ignore_errors: true
 
-    - name: Report if sommelier is running
-      ansible.builtin.debug:
-        msg: "The sommelier process is running."
-      when: sommelier_status.rc == 0
+    - name: Get for Username Data
+      ansible.builtin.command: "getent passwd {{ user_id_to_check }}"
+      register: getent_user
+      failed_when: getent_user.rc not in [0, 2]
+      changed_when: false
 
-    - name: Report if sommelier is not running
+    - name: Check for Username Status
+      ansible.builtin.set_fact:
+        current_user_name: "{{ getent_user.stdout_lines[0].split(':')[0] }}"
+      when: getent_user.rc == 0
+
+    - name: Report current username if Linux and sommelier is running
       ansible.builtin.debug:
-        msg: "The sommelier process is not running."
-      when: sommelier_status.rc != 0
+        msg: "Current username is: {{ current_user_name }} on a Crostini container."
+      when: sommelier_status.rc == 0 and ansible_facts['system']
+
+    # - name: Report if sommelier is running
+    #   ansible.builtin.debug:
+    #     msg: "The sommelier process is running."
+    #   when: sommelier_status.rc == 0
+
+    # - name: Report if sommelier is not running
+    #   ansible.builtin.debug:
+    #     msg: "The sommelier process is not running."
+    #   when: sommelier_status.rc != 0
 
     # # Task 2: Check if a group with the specified GID exists.
     # - name: Get group information for GID {{ id_to_check }}
