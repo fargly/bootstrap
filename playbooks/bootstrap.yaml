@@ -3,26 +3,26 @@
   hosts: 127.0.0.1
   connection: local
   tasks:
-    # - name: Update apt cache and upgrade packages
-    #   become: true
-    #   ansible.builtin.apt:
-    #     upgrade: true
-    #     update_cache: true
-    #   tags: privileged
+    - name: Update apt cache and upgrade packages
+      become: true
+      ansible.builtin.apt:
+        upgrade: true
+        update_cache: true
+      tags: privileged
 
-    # - name: Install packages
-    #   become: true
-    #   ansible.builtin.apt:
-    #     name: "{{ packages }}"
-    #   vars:
-    #     packages:
-    #       - bash-completion
-    #       - binutils
-    #       - dnsutils
-    #       - htop
-    #       - tmux
-    #       - unzip
-    #   tags: privileged
+    - name: Install packages
+      become: true
+      ansible.builtin.apt:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - bash-completion
+          - binutils
+          - dnsutils
+          - htop
+          - tmux
+          - unzip
+      tags: privileged
 
     ## Ensure .local/bin Directory Exists
     - name: Ensure ~/.local/bin directory
