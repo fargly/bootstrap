@@ -41,7 +41,8 @@
 
     - name: Mount Facts
       ansible.builtin.debug:
-        msg: mount_facts
+        msg: "{{ item.fstype }}"
+      loop: "{{ ansible_facts.mounts }}"
 
     # - name: Report if sommelier is running
     #   ansible.builtin.debug:
