@@ -40,6 +40,9 @@
       serviceman:
         name: serviceman
         installpath: "{{ standard_webi_path }}"
+      shellcheck:
+        name: shellcheck
+        installpath: "{{ standard_webi_path }}"
       shfmt:
         name: shfmt
         installpath: "{{ standard_webi_path }}"

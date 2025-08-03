@@ -113,9 +113,3 @@
           export EDITOR=vim
 
         state: present
-
-    # - name: Add basic bashrc items (export EDITOR)
-    #   ansible.builtin.lineinfile:
-    #     path: "{{ ansible_env.HOME }}/.bashrc"
-    #     line: 'export EDITOR=vim'
-    #     state: present

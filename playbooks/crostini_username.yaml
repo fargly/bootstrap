@@ -1,76 +1,81 @@
 ---
-# This playbook checks for a user and a group with specific UIDs/GIDs,
-# and renames them if their names do not match the desired name.
-- name: Ensure user and group with ID 1000 are named 'fargly'
-  hosts: localhost # Using localhost as requested
-  become: yes # Use privilege escalation to run tasks as root
+- name: Ensure user and group with ID 1000 are named 'fargly' on Crostini Containers
+  hosts: localhost
+  become: true
+  gather_facts: true
 
   vars:
     desired_user_name: 'fargly'
     id_to_check: 1000
 
   tasks:
-    # Task 1: Check if a user with the specified UID exists.
-    # The `getent` command queries the user database.
-    # We register the output to a variable named `getent_user`.
-    - name: Get user information for UID {{ id_to_check }}
-      ansible.builtin.command: "getent passwd {{ id_to_check }}"
-      register: getent_user
-      failed_when: getent_user.rc not in [0, 2] # RC 0 is success, RC 2 means not found
-      changed_when: false # This task doesn't change anything
-
-    # Task 2: Check if a group with the specified GID exists.
-    - name: Get group information for GID {{ id_to_check }}
-      ansible.builtin.command: "getent group {{ id_to_check }}"
-      register: getent_group
-      failed_when: getent_group.rc not in [0, 2]
+    - name: Check for Sommelier Process
+      ansible.builtin.command: "pgrep sommelier"
+      register: sommelier_status
+      ignore_errors: true
       changed_when: false
 
-    # Task 3: Extract the current username, if found.
-    - name: Extract the current username
-      ansible.builtin.set_fact:
-        current_user_name: "{{ getent_user.stdout_lines[0].split(':')[0] }}"
-      when: getent_user.rc == 0
-
-    # Task 4: Extract the current group name, if found.
-    - name: Extract the current group name
-      ansible.builtin.set_fact:
-        current_group_name: "{{ getent_group.stdout_lines[0].split(':')[0] }}"
-      when: getent_group.rc == 0
-
-    # Task 5: Conditionally rename the group using the groupmod command.
-    - name: Rename group '{{ current_group_name }}' to '{{ desired_user_name }}'
-      ansible.builtin.command: "groupmod -n {{ desired_user_name }} {{ current_group_name }}"
-      register: groupmod_result
-      changed_when: true
-      failed_when: groupmod_result.rc != 0
-      when: >
-        getent_group.rc == 0 and
-        current_group_name != desired_user_name
-
-    # Task 6: Conditionally rename the user using the usermod command.
-    # This also sets the user's primary group to the new name.
-    - name: Rename user '{{ current_user_name }}' to '{{ desired_user_name }}' and set primary group
-      ansible.builtin.command: "usermod -l {{ desired_user_name }} -g {{ desired_user_name }} {{ current_user_name }}"
-      register: usermod_result
-      changed_when: true
-      failed_when: usermod_result.rc != 0
-      when: >
-        getent_user.rc == 0 and
-        current_user_name != desired_user_name
-
-    # Optional Task 7: Inform the user if the user/group were already correct.
-    - name: User and group are already named '{{ desired_user_name }}'
+    - name: Report if sommelier is running
       ansible.builtin.debug:
-        msg: "User and group with ID {{ id_to_check }} are already named '{{ desired_user_name }}'. No changes were made."
-      when: >
-        getent_user.rc == 0 and getent_group.rc == 0 and
-        current_user_name == desired_user_name and
-        current_group_name == desired_user_name
+        msg: "The sommelier process is running."
+      when: sommelier_status.rc == 0
 
-    # Optional Task 8: Inform the user if the ID was not found for both.
-    - name: User or group with ID {{ id_to_check }} was not found
+    - name: Report if sommelier is not running
       ansible.builtin.debug:
-        msg: "No user or group found with ID {{ id_to_check }}. No changes were made."
-      when: getent_user.rc != 0 or getent_group.rc != 0
+        msg: "The sommelier process is not running."
+      when: sommelier_status.rc != 0
 
+    # # Task 2: Check if a group with the specified GID exists.
+    # - name: Get group information for GID {{ id_to_check }}
+    #   ansible.builtin.command: "getent group {{ id_to_check }}"
+    #   register: getent_group
+    #   failed_when: getent_group.rc not in [0, 2]
+    #   changed_when: false
+
+    # # Task 3: Extract the current username, if found.
+    # - name: Extract the current username
+    #   ansible.builtin.set_fact:
+    #     current_user_name: "{{ getent_user.stdout_lines[0].split(':')[0] }}"
+    #   when: getent_user.rc == 0
+
+    # # Task 4: Extract the current group name, if found.
+    # - name: Extract the current group name
+    #   ansible.builtin.set_fact:
+    #     current_group_name: "{{ getent_group.stdout_lines[0].split(':')[0] }}"
+    #   when: getent_group.rc == 0
+
+    # # Task 5: Conditionally rename the group using the groupmod command.
+    # - name: Rename group '{{ current_group_name }}' to '{{ desired_user_name }}'
+    #   ansible.builtin.command: "groupmod -n {{ desired_user_name }} {{ current_group_name }}"
+    #   register: groupmod_result
+    #   changed_when: true
+    #   failed_when: groupmod_result.rc != 0
+    #   when: >
+    #     getent_group.rc == 0 and
+    #     current_group_name != desired_user_name
+
+    # # Task 6: Conditionally rename the user using the usermod command.
+    # # This also sets the user's primary group to the new name.
+    # - name: Rename user '{{ current_user_name }}' to '{{ desired_user_name }}' and set primary group
+    #   ansible.builtin.command: "usermod -l {{ desired_user_name }} -g {{ desired_user_name }} {{ current_user_name }}"
+    #   register: usermod_result
+    #   changed_when: true
+    #   failed_when: usermod_result.rc != 0
+    #   when: >
+    #     getent_user.rc == 0 and
+    #     current_user_name != desired_user_name
+
+    # # Optional Task 7: Inform the user if the user/group were already correct.
+    # - name: User and group are already named '{{ desired_user_name }}'
+    #   ansible.builtin.debug:
+    #     msg: "User and group with ID {{ id_to_check }} are already named '{{ desired_user_name }}'. No changes were made."
+    #   when: >
+    #     getent_user.rc == 0 and getent_group.rc == 0 and
+    #     current_user_name == desired_user_name and
+    #     current_group_name == desired_user_name
+
+    # # Optional Task 8: Inform the user if the ID was not found for both.
+    # - name: User or group with ID {{ id_to_check }} was not found
+    #   ansible.builtin.debug:
+    #     msg: "No user or group found with ID {{ id_to_check }}. No changes were made."
+    #   when: getent_user.rc != 0 or getent_group.rc != 0
