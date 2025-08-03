@@ -14,38 +14,34 @@
       ansible.builtin.meta: end_play
       when: not ansible_facts['system'] == "Linux"
 
-    - name: Check for Sommelier Process
-      ansible.builtin.shell: pgrep -f sommelier > /dev/null 2>&1
-      register: sommelier_status
-      ignore_errors: true
+    - name: Check for lxcfs Filesytem Type
+      ansible.builtin.shell: |
+        set -o pipefail
+        "mount | grep lxcfs | wc -l"
+      register: lxcfs_count
       changed_when: false
-      failed_when: sommelier_status.rc not in [0, 1]
 
-    - name: Report if sommelier is running
+    - name: Transform count to int
+      ansible.builtin.set_fact:
+        lxcfs_count_int: "{{ lxcfs_count.stdout | int }}"
+      changed_when: false
+
+    - name: Report mount status
       ansible.builtin.debug:
-        msg: "The sommelier process is running."
-      when: sommelier_status.rc == 0
+        msg: "mount status: {{ lxcfs_count }}"
 
     - name: Set Crostini Variable
       ansible.builtin.set_fact:
         crostini: true
-      when: sommelier_status.rc == 0
+      when: lxcfs_count_int != 0
 
-    - name: Get for Username Data
-      ansible.builtin.command: "getent passwd {{ id_to_check }}"
-      register: getent_user
-      failed_when: getent_user.rc not in [0, 2]
-      changed_when: false
-
-    - name: Check for Username Status
-      ansible.builtin.set_fact:
-        current_user_name: "{{ getent_user.stdout_lines[0].split(':')[0] }}"
-      when: getent_user.rc == 0
-
-    - name: Report current username if Linux and sommelier is running
+    - name: Report crostini status
       ansible.builtin.debug:
-        msg: "Current username is: {{ current_user_name }} on a Crostini container."
-      when: crostini and ansible_facts['system'] == 'Linux'
+        msg: "crostini status: {{ crostini }}"
+
+    - name: Mount Facts
+      ansible.builtin.debug:
+        msg: mount_facts
 
     # - name: Report if sommelier is running
     #   ansible.builtin.debug:
