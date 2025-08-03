@@ -21,9 +21,10 @@
       changed_when: false
       failed_when: sommelier_status.rc not in [0, 1]
 
-    - name: sommelier status
+    - name: Report if sommelier is running
       ansible.builtin.debug:
-        sommelier_status: "{{ sommelier_status }}"
+        msg: "The sommelier process is running."
+      when: sommelier_status.rc == 0
 
     - name: Set Crostini Variable
       ansible.builtin.set_fact:
