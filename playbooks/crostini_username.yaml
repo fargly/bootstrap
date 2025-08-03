@@ -10,49 +10,38 @@
     crostini: false
 
   tasks:
+    - name: Set Crostini Variable
+      ansible.builtin.set_fact:
+        crostini: true
+      when: ansible_facts['product_name'] == "crosvm"
+
+    # - name: Report crostini status
+    #   ansible.builtin.debug:
+    #     msg: "crostini status: {{ crostini }}"
+
     - name: End the play on hosts that are not Linux
       ansible.builtin.meta: end_play
       when: not ansible_facts['system'] == "Linux"
 
-    - name: Check for lxcfs Filesytem Type
-      ansible.builtin.shell: |
-        set -o pipefail
-        "mount | grep lxcfs | wc -l"
-      register: lxcfs_count
-      changed_when: false
+    - name: End the play on hosts that are not Crostini
+      ansible.builtin.meta: end_play
+      when: not crostini
 
-    - name: Transform count to int
-      ansible.builtin.set_fact:
-        lxcfs_count_int: "{{ lxcfs_count.stdout | int }}"
-      changed_when: false
+    # - name: Check for lxcfs Filesytem Type
+    #   ansible.builtin.shell: |
+    #     set -o pipefail
+    #     "mount | grep lxcfs | wc -l"
+    #   register: lxcfs_count
+    #   changed_when: false
 
-    - name: Report mount status
-      ansible.builtin.debug:
-        msg: "mount status: {{ lxcfs_count }}"
+    # - name: Transform count to int
+    #   ansible.builtin.set_fact:
+    #     lxcfs_count_int: "{{ lxcfs_count.stdout | int }}"
+    #   changed_when: false
 
-    - name: Set Crostini Variable
-      ansible.builtin.set_fact:
-        crostini: true
-      when: lxcfs_count_int != 0
-
-    - name: Report crostini status
-      ansible.builtin.debug:
-        msg: "crostini status: {{ crostini }}"
-
-    - name: Mount Facts
-      ansible.builtin.debug:
-        msg: "{{ item.fstype }}"
-      loop: "{{ ansible_facts.mounts }}"
-
-    # - name: Report if sommelier is running
+    # - name: Report mount status
     #   ansible.builtin.debug:
-    #     msg: "The sommelier process is running."
-    #   when: sommelier_status.rc == 0
-
-    # - name: Report if sommelier is not running
-    #   ansible.builtin.debug:
-    #     msg: "The sommelier process is not running."
-    #   when: sommelier_status.rc != 0
+    #     msg: "mount status: {{ lxcfs_count }}"
 
     # # Task 2: Check if a group with the specified GID exists.
     # - name: Get group information for GID {{ id_to_check }}
