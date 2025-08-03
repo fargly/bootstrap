@@ -7,6 +7,7 @@
   vars:
     desired_user_name: 'fargly'
     id_to_check: 1000
+    crostini: false
 
   tasks:
     - name: End the play on hosts that are not Linux
@@ -19,6 +20,11 @@
       ignore_errors: true
       changed_when: false
       failed_when: sommelier_status.rc not in [0, 1]
+
+    - name: Set Crostini Variable
+      ansible.builtin.set_fact:
+        crostini: true
+      when: sommelier_status.rc == 0
 
     - name: Get for Username Data
       ansible.builtin.command: "getent passwd {{ id_to_check }}"
@@ -34,7 +40,7 @@
     - name: Report current username if Linux and sommelier is running
       ansible.builtin.debug:
         msg: "Current username is: {{ current_user_name }} on a Crostini container."
-      when: sommelier_status.rc == 0 and ansible_facts['system'] == 'Linux'
+      when: crostini and ansible_facts['system'] == 'Linux'
 
     # - name: Report if sommelier is running
     #   ansible.builtin.debug:
