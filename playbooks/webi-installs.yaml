@@ -67,3 +67,14 @@
       ansible.builtin.command: "{{ ansible_env.HOME }}/.local/bin/webi {{ item.item.value.name }}"
       loop: "{{ utility_check_results.results }}"
       changed_when: not item.stat.exists
+
+    #- name: Add Zoxide Variables
+
+      #export _ZO_ECHO=1
+      #export _ZO_EXCLUDE_DIRS="/storage/pcontent"
+      #eval "$($HOME/.local/bin/zoxide init bash)"
+      #
+
+
+
+
