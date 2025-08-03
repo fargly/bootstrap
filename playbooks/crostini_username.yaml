@@ -34,9 +34,9 @@
         current_user_name: "{{ getent_user.stdout_lines[0].split(':')[0] }}"
       when: getent_user.rc == 0
 
-    - name: Display user information
-      ansible.builtin.debug:
-        msg: "Username: {{ current_user_name }}"
+    - name: End the play on desired user name end state
+      ansible.builtin.meta: end_play
+      when: current_user_name == desired_user_name
 
     # # Task 3: Extract the current username, if found.
     # - name: Extract the current username
