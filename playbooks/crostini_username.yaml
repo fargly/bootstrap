@@ -29,9 +29,14 @@
       failed_when: getent_user.rc not in [0, 2]
       changed_when: false
 
+    - name: Extract the current username
+      ansible.builtin.set_fact:
+        current_user_name: "{{ getent_user.stdout_lines[0].split(':')[0] }}"
+      when: getent_user.rc == 0
+
     - name: Display user information
       ansible.builtin.debug:
-        msg: "User information: {{ getent_user.stdout }}"
+        msg: "Username: {{ current_user_name }}"
 
     # # Task 3: Extract the current username, if found.
     # - name: Extract the current username
