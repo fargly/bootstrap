@@ -1,4 +1,9 @@
 ---
+################################################################################################################################
+## NOTE: This playbook is designed to ensure that the user and group with ID 1000 are named 'fargly' on Crostini Containers.
+##       You must run this playbook with elevated privileges (e.g., using `ansible-playbook -b`).
+##       You must stop the Crostini container in Developer Settings/Manage Extra Containers AFTER running this playbook.
+################################################################################################################################
 - name: Ensure user and group with ID 1000 are named 'fargly' on Crostini Containers
   hosts: localhost
   become: true
