@@ -1,4 +1,3 @@
-
 # curl -LO -v https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
 # curl -LO -v https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
 # curl -LO -v https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
@@ -33,4 +32,16 @@
 # 8.75 MB
 # 3 weeks ago
 # nvim-macos-x86_64.tar.gz
-# 
+---
+- name: Cross Platform Neovim Playbook
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: Print All Facts
+      ansible.builtin.debug:
+        var: ansible_facts
+
+    # - name: Mount Facts
+    #   ansible.builtin.debug:
+    #     msg: "{{ item.fstype }}"
+    #   loop: "{{ ansible_facts.mounts }}"
