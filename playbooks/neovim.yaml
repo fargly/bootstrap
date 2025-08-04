@@ -38,6 +38,8 @@
   gather_facts: true
 
   vars:
+    localbin: "{{ ansible_env.HOME }}/.local/bin"
+    localnvim: "{{ ansible_env.HOME }}/.local/opt/nvim"
     system2nvimsystem:
       Darwin: "macos"
       Linux: "linux"
@@ -52,17 +54,16 @@
           os_family: {{ ansible_facts.os_family }}
           distribution: {{ ansible_facts.distribution }}
           distribution_version: {{ ansible_facts.distribution_version }}
-        # var: ansible_facts
 
     - name: Ensure ~/.local/bin directory
       ansible.builtin.file:
-        path: "{{ ansible_env.HOME }}/.local/bin"
+        path: "{{ localbin }}"
         state: directory
         mode: "0755"
 
     - name: Ensure ~/.local/opt/nvim directory
       ansible.builtin.file:
-        path: "{{ ansible_env.HOME }}/.local/opt/nvim"
+        path: "{{ localnvim }}"
         state: directory
         mode: "0755"
 
@@ -77,3 +78,38 @@
     - name: Create nvim Download URI
       ansible.builtin.debug:
         msg: "{{ download_uri }}"
+
+    # - name: Fetch content from the URL
+    #   ansible.builtin.uri:
+    #     url: "{{ download_uri }}"
+    #     method: GET
+    #     return_content: true
+    #     validate_certs: true
+    #   register: url_response
+    #   # no_log: true
+
+    # - name: Fetch content from the URL
+    #   ansible.builtin.get_url:
+    #     url: "{{ download_uri }}"
+    #     dest: "/tmp/nvim.tar.gz"
+    #     validate_certs: true
+    #     mode: "0644"
+    #     force: true
+
+    - name: Create a temporary file for Neovim download
+      ansible.builtin.tempfile:
+        state: file
+        suffix: .tar.gz
+      register: nvim_tempfile
+
+    - name: Download Neovim tarball to the temporary file
+      ansible.builtin.get_url:
+        url: "{{ download_uri }}"
+        dest: "{{ nvim_tempfile.path }}"
+        validate_certs: true
+        mode: "0644"
+        force: true
+
+    - name: Display the temporary file path
+      ansible.builtin.debug:
+        msg: "tgz temp file: {{ nvim_tempfile.path }}"
