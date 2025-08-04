@@ -29,6 +29,7 @@
         src: "{{ localnvim }}/bin/nvim"
         dest: "{{ localbin }}/nvim"
         state: link
+        follow: false
         force: true
 
     - name: Create vim symlink for nvim symlink
@@ -36,6 +37,7 @@
         src: "{{ localbin }}/nvim"
         dest: "{{ localbin }}/vim"
         state: link
+        follow: false
         force: true
 
     - name: Set Direct Download URI
