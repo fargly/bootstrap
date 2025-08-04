@@ -66,6 +66,13 @@
         state: directory
         mode: "0755"
 
+    - name: Set Direct Download URI
+      ansible.builtin.set_fact:
+        download_uri: >-
+          {{ "https://github.com/neovim/neovim/releases/latest/download/" +
+          "nvim-{{ system2nvimsystem[ansible_facts.system] }}-{{ ansible_facts.architecture }}.tar.gz"
+          }}
+
     - name: Create nvim Download URI
       ansible.builtin.debug:
-        msg: "https://github.com/neovim/neovim/releases/latest/nvim-{{ system2nvimsystem[ansible_facts.system] }}-{{ ansible_facts.architecture }}.tar.gz"
+        msg: "{{ download_uri }}"
