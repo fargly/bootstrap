@@ -12,15 +12,6 @@
 
   tasks:
 
-    # - name: Print All Facts
-    #   ansible.builtin.debug:
-    #     msg: |
-    #       arch: {{ ansible_facts.architecture }}
-    #       system: {{ ansible_facts.system }}
-    #       os_family: {{ ansible_facts.os_family }}
-    #       distribution: {{ ansible_facts.distribution }}
-    #       distribution_version: {{ ansible_facts.distribution_version }}
-
     - name: Ensure ~/.local/bin directory
       ansible.builtin.file:
         path: "{{ localbin }}"
@@ -33,14 +24,19 @@
         state: directory
         mode: "0755"
 
-    - name: Check if nvim binary exists
-      ansible.builtin.stat:
-        path: "{{ localnvim }}/bin/nvim"
-      register: nvim_binary
+    - name: Create symlink for nvim executable
+      ansible.builtin.file:
+        src: "{{ localnvim }}/bin/nvim"
+        dest: "{{ localbin }}/nvim"
+        state: link
+        force: true
 
-    - name: Skip if nvim binary exists
-      ansible.builtin.meta: end_play
-      when: nvim_binary.stat.exists
+    - name: Create vim symlink for nvim symlink
+      ansible.builtin.file:
+        src: "{{ localbin }}/nvim"
+        dest: "{{ localbin }}/vim"
+        state: link
+        force: true
 
     - name: Set Direct Download URI
       ansible.builtin.set_fact:
@@ -50,9 +46,14 @@
           ansible_facts.architecture + ".tar.gz"
           }}
 
-    # - name: Create nvim Download URI
-    #   ansible.builtin.debug:
-    #     msg: "{{ download_uri }}"
+    - name: Check if nvim binary exists
+      ansible.builtin.stat:
+        path: "{{ localnvim }}/bin/nvim"
+      register: nvim_binary
+
+    - name: Skip if nvim binary exists
+      ansible.builtin.meta: end_play
+      when: nvim_binary.stat.exists
 
     - name: Create a temporary file for Neovim download
       ansible.builtin.tempfile:
@@ -75,13 +76,6 @@
         remote_src: true
         extra_opts:
           - --strip-components=1
-
-    - name: Create symlink for nvim executable
-      ansible.builtin.file:
-        src: "{{ localnvim }}/bin/nvim"
-        dest: "{{ localbin }}/nvim"
-        state: link
-        force: true
 
     - name: Delete temporary file
       ansible.builtin.file:
