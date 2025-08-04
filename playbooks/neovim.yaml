@@ -1,37 +1,3 @@
-# curl -LO -v https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-# curl -LO -v https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
-# curl -LO -v https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
-#
-#
-# nvim-linux-arm64.appimage
-# sha256:3e275b153706e496d4c00b43e4561b473a1450eacfb7915f6ae0af52a447b927
-# 10.4 MB
-# 3 weeks ago
-# nvim-linux-arm64.appimage.zsync
-# sha256:4e343b9d9f2d07762e7522284cade24cf0739a83df33bc32b0d5dc1a4615dcd8
-# 36.6 KB
-# 3 weeks ago
-# nvim-linux-arm64.tar.gz
-# sha256:ed53af6b8125475003b8a44a2b73d39fa6cc38243ec39c31e2f85062c302ccaa
-# 10.4 MB
-# 3 weeks ago
-# nvim-linux-x86_64.appimage
-# sha256:5f377dc48c49a4170bd698a80ef461a702b8ebb8b2f7ddbb776341503d36415f
-# 10.5 MB
-# 3 weeks ago
-# nvim-linux-x86_64.appimage.zsync
-# sha256:54bc84edaae20628b1c93d0fc3495f785039d2fe4dd77ffd73c32638ea25efde
-# 36.9 KB
-# 3 weeks ago
-# nvim-linux-x86_64.tar.gz
-# sha256:02b808a3ee8fc30161e07fe3c3edfb24b28bd0295323ac5dbdd8ec7012cac67d
-# 10.4 MB
-# 3 weeks ago
-# nvim-macos-arm64.tar.gz
-# sha256:17d22826f19fe28a11f9ab4bee13c43399fdcce485eabfa2bea6c5b3d660740f
-# 8.75 MB
-# 3 weeks ago
-# nvim-macos-x86_64.tar.gz
 ---
 - name: Cross Platform Neovim Playbook
   hosts: localhost
@@ -46,14 +12,14 @@
 
   tasks:
 
-    - name: Print All Facts
-      ansible.builtin.debug:
-        msg: |
-          arch: {{ ansible_facts.architecture }}
-          system: {{ ansible_facts.system }}
-          os_family: {{ ansible_facts.os_family }}
-          distribution: {{ ansible_facts.distribution }}
-          distribution_version: {{ ansible_facts.distribution_version }}
+    # - name: Print All Facts
+    #   ansible.builtin.debug:
+    #     msg: |
+    #       arch: {{ ansible_facts.architecture }}
+    #       system: {{ ansible_facts.system }}
+    #       os_family: {{ ansible_facts.os_family }}
+    #       distribution: {{ ansible_facts.distribution }}
+    #       distribution_version: {{ ansible_facts.distribution_version }}
 
     - name: Ensure ~/.local/bin directory
       ansible.builtin.file:
@@ -67,6 +33,15 @@
         state: directory
         mode: "0755"
 
+    - name: Check if nvim binary exists
+      ansible.builtin.stat:
+        path: "{{ localnvim }}/bin/nvim"
+      register: nvim_binary
+
+    - name: Skip if nvim binary exists
+      ansible.builtin.meta: end_play
+      when: nvim_binary.stat.exists
+
     - name: Set Direct Download URI
       ansible.builtin.set_fact:
         download_uri: >-
@@ -75,26 +50,9 @@
           ansible_facts.architecture + ".tar.gz"
           }}
 
-    - name: Create nvim Download URI
-      ansible.builtin.debug:
-        msg: "{{ download_uri }}"
-
-    # - name: Fetch content from the URL
-    #   ansible.builtin.uri:
-    #     url: "{{ download_uri }}"
-    #     method: GET
-    #     return_content: true
-    #     validate_certs: true
-    #   register: url_response
-    #   # no_log: true
-
-    # - name: Fetch content from the URL
-    #   ansible.builtin.get_url:
-    #     url: "{{ download_uri }}"
-    #     dest: "/tmp/nvim.tar.gz"
-    #     validate_certs: true
-    #     mode: "0644"
-    #     force: true
+    # - name: Create nvim Download URI
+    #   ansible.builtin.debug:
+    #     msg: "{{ download_uri }}"
 
     - name: Create a temporary file for Neovim download
       ansible.builtin.tempfile:
@@ -110,6 +68,22 @@
         mode: "0644"
         force: true
 
-    - name: Display the temporary file path
-      ansible.builtin.debug:
-        msg: "tgz temp file: {{ nvim_tempfile.path }}"
+    - name: Unarchive Neovim to Defined localnvim Directory
+      ansible.builtin.unarchive:
+        src: "{{ nvim_tempfile.path }}"
+        dest: "{{ localnvim }}"
+        remote_src: true
+        extra_opts:
+          - --strip-components=1
+
+    - name: Create symlink for nvim executable
+      ansible.builtin.file:
+        src: "{{ localnvim }}/bin/nvim"
+        dest: "{{ localbin }}/nvim"
+        state: link
+        force: true
+
+    - name: Delete temporary file
+      ansible.builtin.file:
+        path: "{{ nvim_tempfile.path }}"
+        state: absent
