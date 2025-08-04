@@ -39,7 +39,13 @@
   tasks:
     - name: Print All Facts
       ansible.builtin.debug:
-        var: ansible_facts
+        msg: |
+          arch: {{ ansible_facts.architecture }}
+          system: {{ ansible_facts.system }}
+          os_family: {{ ansible_facts.os_family }}
+          distribution: {{ ansible_facts.distribution }}
+          distribution_version: {{ ansible_facts.distribution_version }}
+        # var: ansible_facts
 
     # - name: Mount Facts
     #   ansible.builtin.debug:
