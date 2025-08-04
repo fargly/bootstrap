@@ -47,6 +47,21 @@
           distribution_version: {{ ansible_facts.distribution_version }}
         # var: ansible_facts
 
+    ## Ensure .local/bin Directory Exists
+    - name: Ensure ~/.local/bin directory
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.local/bin"
+        state: directory
+        mode: "0755"
+
+    ## Ensure .local/opt Directory Exists
+    - name: Ensure ~/.local/opt/nvim directory
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.local/opt/nvim"
+        state: directory
+        mode: "0755"
+
+
     # - name: Mount Facts
     #   ansible.builtin.debug:
     #     msg: "{{ item.fstype }}"
