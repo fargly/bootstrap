@@ -1,0 +1,36 @@
+
+# curl -LO -v https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+# curl -LO -v https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
+# curl -LO -v https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
+#
+#
+# nvim-linux-arm64.appimage
+# sha256:3e275b153706e496d4c00b43e4561b473a1450eacfb7915f6ae0af52a447b927
+# 10.4 MB
+# 3 weeks ago
+# nvim-linux-arm64.appimage.zsync
+# sha256:4e343b9d9f2d07762e7522284cade24cf0739a83df33bc32b0d5dc1a4615dcd8
+# 36.6 KB
+# 3 weeks ago
+# nvim-linux-arm64.tar.gz
+# sha256:ed53af6b8125475003b8a44a2b73d39fa6cc38243ec39c31e2f85062c302ccaa
+# 10.4 MB
+# 3 weeks ago
+# nvim-linux-x86_64.appimage
+# sha256:5f377dc48c49a4170bd698a80ef461a702b8ebb8b2f7ddbb776341503d36415f
+# 10.5 MB
+# 3 weeks ago
+# nvim-linux-x86_64.appimage.zsync
+# sha256:54bc84edaae20628b1c93d0fc3495f785039d2fe4dd77ffd73c32638ea25efde
+# 36.9 KB
+# 3 weeks ago
+# nvim-linux-x86_64.tar.gz
+# sha256:02b808a3ee8fc30161e07fe3c3edfb24b28bd0295323ac5dbdd8ec7012cac67d
+# 10.4 MB
+# 3 weeks ago
+# nvim-macos-arm64.tar.gz
+# sha256:17d22826f19fe28a11f9ab4bee13c43399fdcce485eabfa2bea6c5b3d660740f
+# 8.75 MB
+# 3 weeks ago
+# nvim-macos-x86_64.tar.gz
+# 
