@@ -51,9 +51,17 @@
         path: "{{ localnvim }}/bin/nvim"
       register: nvim_binary
 
+    - name: Check if FORCE_UPDATE is set
+      ansible.builtin.set_fact:
+        force_update: "{{ lookup('env', 'FORCE_UPDATE') | default('', true) }}"
+
+    # - name: Display FORCE_UPDATE value
+    #   ansible.builtin.debug:
+    #     msg: "FORCE_UPDATE is set to: {{ force_update }}"
+
     - name: Skip if nvim binary exists
       ansible.builtin.meta: end_play
-      when: nvim_binary.stat.exists
+      when: nvim_binary.stat.exists and not force_update
 
     - name: Create a temporary file for Neovim download
       ansible.builtin.tempfile:
