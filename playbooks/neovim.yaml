@@ -36,7 +36,14 @@
 - name: Cross Platform Neovim Playbook
   hosts: localhost
   gather_facts: true
+
+  vars:
+    system2nvimsystem:
+      Darwin: "macos"
+      Linux: "linux"
+
   tasks:
+
     - name: Print All Facts
       ansible.builtin.debug:
         msg: |
@@ -47,22 +54,18 @@
           distribution_version: {{ ansible_facts.distribution_version }}
         # var: ansible_facts
 
-    ## Ensure .local/bin Directory Exists
     - name: Ensure ~/.local/bin directory
       ansible.builtin.file:
         path: "{{ ansible_env.HOME }}/.local/bin"
         state: directory
         mode: "0755"
 
-    ## Ensure .local/opt Directory Exists
     - name: Ensure ~/.local/opt/nvim directory
       ansible.builtin.file:
         path: "{{ ansible_env.HOME }}/.local/opt/nvim"
         state: directory
         mode: "0755"
 
-
-    # - name: Mount Facts
-    #   ansible.builtin.debug:
-    #     msg: "{{ item.fstype }}"
-    #   loop: "{{ ansible_facts.mounts }}"
+    - name: Create nvim Download URI
+      ansible.builtin.debug:
+        msg: "https://github.com/neovim/neovim/releases/latest/nvim-{{ system2nvimsystem[ansible_facts.system] }}-{{ ansible_facts.architecture }}.tar.gz"

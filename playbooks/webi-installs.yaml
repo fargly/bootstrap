@@ -68,13 +68,7 @@
       loop: "{{ utility_check_results.results }}"
       changed_when: not item.stat.exists
 
-    #- name: Add Zoxide Variables
-
-      #export _ZO_ECHO=1
-      #export _ZO_EXCLUDE_DIRS="/storage/pcontent"
-      #eval "$($HOME/.local/bin/zoxide init bash)"
-      #
-
-
-
-
+    # - name: Add Zoxide Variables
+    # export _ZO_ECHO=1
+    # export _ZO_EXCLUDE_DIRS="/storage/pcontent"
+    # eval "$($HOME/.local/bin/zoxide init bash)"
