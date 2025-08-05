@@ -22,7 +22,7 @@
           - htop
           - tmux
           - unzip
-          - gnu
+          - gnu-tar
       tags: privileged
 
     ## Ensure .local/bin Directory Exists
