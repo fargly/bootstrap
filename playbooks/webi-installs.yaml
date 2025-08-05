@@ -52,6 +52,9 @@
       yq:
         name: yq
         installpath: "{{ standard_webi_path }}"
+      zoxide:
+        name: zoxide
+        installpath: "{{ standard_webi_path }}"
       bun:
         name: bun
         installpath: "{{ bun_path }}"
