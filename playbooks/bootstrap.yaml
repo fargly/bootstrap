@@ -33,21 +33,6 @@
         # This is a basic form of idempotency.
         creates: ~/.ansible/collections/ansible_collections/community/general
 
-    # - name: Check if Homebrew is already installed
-    #   ansible.builtin.stat:
-    #     path: /opt/homebrew/bin/brew
-    #   register: brew_executable
-    #   when: ansible_os_family == 'Darwin'
-
-    # - name: Download and install Homebrew
-    #   ansible.builtin.shell: |
-    #     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    #   args:
-    #     creates: /opt/homebrew/bin/brew
-    #   register: homebrew_install_result
-    #   changed_when: homebrew_install_result.rc != 0 or "already installed" not in homebrew_install_result.stdout
-    #   when: ansible_os_family == 'Darwin' and not brew_executable.stat.exists
-
     - name: Ensure Homebrew is installed
       ansible.builtin.shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       args:
