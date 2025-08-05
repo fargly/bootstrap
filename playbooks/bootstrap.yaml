@@ -26,10 +26,52 @@
       tags: privileged
       when: not ansible_os_family == 'Darwin'
 
-    - name: "This task only runs on macOS"
-      ansible.builtin.debug:
-        msg: "This is a macOS-specific task!"
+    - name: Ensure the community.general collection is installed
+      ansible.builtin.command: uvx --from ansible-core ansible-galaxy collection install community.general
+      args:
+        # Prevents Ansible from re-running this task if the collection is already installed.
+        # This is a basic form of idempotency.
+        creates: ~/.ansible/collections/ansible_collections/community/general
+
+    # - name: Check if Homebrew is already installed
+    #   ansible.builtin.stat:
+    #     path: /opt/homebrew/bin/brew
+    #   register: brew_executable
+    #   when: ansible_os_family == 'Darwin'
+
+    # - name: Download and install Homebrew
+    #   ansible.builtin.shell: |
+    #     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    #   args:
+    #     creates: /opt/homebrew/bin/brew
+    #   register: homebrew_install_result
+    #   changed_when: homebrew_install_result.rc != 0 or "already installed" not in homebrew_install_result.stdout
+    #   when: ansible_os_family == 'Darwin' and not brew_executable.stat.exists
+
+    - name: Ensure Homebrew is installed
+      ansible.builtin.shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      args:
+        creates: /opt/homebrew/bin/brew
+      become: false
       when: ansible_os_family == 'Darwin'
+      tags:
+        - setup
+
+    - name: Install specified Homebrew packages
+      community.general.homebrew:
+        name:
+          - bash-completion
+          - binutils
+          - htop
+          - tmux
+          - unzip
+          - git
+          - gnu-tar
+        state: present
+        update_homebrew: true
+      become: false
+      tags:
+        - packages
 
     ## Ensure .local/bin Directory Exists
     - name: Ensure ~/.local/bin directory
@@ -89,6 +131,19 @@
           #uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
           ## Note: You may need to add '--ask-vault-pass' in bootstrapping mode
           uvx --from ansible-core ansible-vault $@
+
+          ## EOF
+        mode: "0755"
+
+    - name: Create ansible-galaxy script
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.local/bin/ansible-galaxy"
+        content: |
+          #!/usr/bin/env bash
+          ## uvx based Ansible Galaxy Launcher v0.1 20250724
+
+          # uvx --from ansible-core ansible-galaxy  --skip-tags "privileged" $@
+          uvx --from ansible-core ansible-galaxy $@
 
           ## EOF
         mode: "0755"
