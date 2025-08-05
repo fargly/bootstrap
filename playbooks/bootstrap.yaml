@@ -9,6 +9,7 @@
         upgrade: true
         update_cache: true
       tags: privileged
+      when: not ansible_os_family == 'Darwin'
 
     - name: Install packages
       become: true
@@ -22,8 +23,13 @@
           - htop
           - tmux
           - unzip
-          - gnu-tar
       tags: privileged
+      when: not ansible_os_family == 'Darwin'
+
+    - name: "This task only runs on macOS"
+      ansible.builtin.debug:
+        msg: "This is a macOS-specific task!"
+      when: ansible_os_family == 'Darwin'
 
     ## Ensure .local/bin Directory Exists
     - name: Ensure ~/.local/bin directory
