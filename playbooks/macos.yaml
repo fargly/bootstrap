@@ -28,7 +28,7 @@
 
     - name: Check if the community.general collection is already installed
       ansible.builtin.command:
-        cmd: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy collection list | grep community.general"
+        cmd: ansible-galaxy collection list | grep community.general
       register: collection_check
       failed_when: false # Prevents the play from failing if the collection isn't found
       changed_when: false # This is a check, not a change
@@ -41,6 +41,50 @@
         #     creates: "{{ ansible_env.HOME }}/.ansible/collections/ansible_collections/community/general"
       changed_when: false # This is a check, not a change
       when: collection_check.stdout == ''
+
+    ## macOS/Darwin Specific Tasks
+    - name: Ensure Homebrew is installed
+      ansible.builtin.shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      args:
+        creates: /opt/homebrew/bin/brew
+      become: false
+      when: ansible_os_family == 'Darwin'
+      tags:
+        - setup
+
+    - name: Install specified Homebrew packages
+      community.general.homebrew:
+        name:
+          - bash-completion
+          - binutils
+          - htop
+          - tmux
+          - unzip
+          - git
+          - gnu-tar
+        state: present
+        update_homebrew: true
+      become: false
+      when: ansible_os_family == 'Darwin'
+      tags:
+        - packages
+
+    - name: Find the username for UID 501
+      ansible.builtin.command: dscl . -search /Users UniqueID 501
+      register: user_info
+      changed_when: false # This is a lookup command, not a change
+      when: ansible_os_family == 'Darwin'
+
+    - name: Extract username from command output
+      ansible.builtin.set_fact:
+        target_user: "{{ user_info.stdout | regex_search('^\\S+') }}"
+      when: ansible_os_family == 'Darwin'
+
+    # - name: Set the user's shell to bash
+    #   ansible.builtin.user:
+    #     name: "{{ target_user }}"
+    #     shell: /bin/bash
+    #   when: target_user is defined and target_user | length > 0 and ansible_os_family == 'Darwin'
 
     ## Ensure .local/bin Directory Exists
     - name: Ensure ~/.local/bin directory
@@ -69,6 +113,8 @@
         content: |
           #!/usr/bin/env bash
           ## uvx based Ansible Playbook Launcher v0.1 20250724
+
+          #uvx --from ansible-core ansible-playbook --ask-become-pass
           uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
 
           ## EOF
@@ -80,6 +126,8 @@
         content: |
           #!/usr/bin/env bash
           ## uvx based Ansible Playbook Launcher v0.1 20250724
+
+          #uvx --from ansible-core ansible-playbook
           uvx --from ansible-core ansible-playbook --ask-become-pass $@
 
           ## EOF
@@ -91,6 +139,9 @@
         content: |
           #!/usr/bin/env bash
           ## uvx based Ansible Vault Launcher v0.1 20250724
+
+          #uvx --from ansible-core ansible-playbook --ask-become-pass
+          #uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
           ## Note: You may need to add '--ask-vault-pass' in bootstrapping mode
           uvx --from ansible-core ansible-vault $@
 
@@ -103,6 +154,8 @@
         content: |
           #!/usr/bin/env bash
           ## uvx based Ansible Galaxy Launcher v0.1 20250724
+
+          # uvx --from ansible-core ansible-galaxy  --skip-tags "privileged" $@
           uvx --from ansible-core ansible-galaxy $@
 
           ## EOF
