@@ -13,6 +13,17 @@
     script_uri: "https://webi.sh"
 
   tasks:
+
+    - name: Remove the env file line
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_env.HOME }}/.bashrc"
+        create: true
+        mode: "0755"
+        line: |
+          PATH="$HOME/.local/bin:$PATH"
+          export PATH
+        state: absent
+    
     - name: Create the user's bin directory if it doesn't exist
       ansible.builtin.file:
         path: "{{ script_dir }}"
