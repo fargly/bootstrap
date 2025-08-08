@@ -56,14 +56,18 @@
       changed_when: false
       when: target_user is defined and target_user | length > 0
 
-    - name: Parse dscl output
+    # - name: Parse dscl output
+    #   ansible.builtin.set_fact:
+    #     shell_info_parsed: >
+    #       {{ shell_info.stdout_lines | map('split', ': ', 1) | from_items }}
+
+    - name: Extract current shell from dscl output
       ansible.builtin.set_fact:
-        shell_info_parsed: >
-          {{ shell_info.stdout_lines | map('split', ': ', 1) | from_items }}
+        current_shell: "{{ shell_info.stdout | regex_search('UserShell: (.+)', '\\1') }}"
 
     - name: Ensure the user's shell is bash
       ansible.builtin.debug:
-        msg: "Current shell for user {{ target_user }} is {{ shell_info_parsed }}"
+        msg: "Current shell for user {{ target_user }} is {{ current_shell }}"
 
     - name: Set the user's shell to bash
       ansible.builtin.command: "chsh -s /bin/bash {{ target_user }}"
