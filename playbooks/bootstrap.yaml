@@ -142,6 +142,8 @@
     - name: Add basic bashrc items
       ansible.builtin.lineinfile:
         path: "{{ ansible_env.HOME }}/.bashrc"
+        create: true
+        insertafter: EOF
         line: |
 
           set -o vi
