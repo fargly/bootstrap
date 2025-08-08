@@ -43,8 +43,9 @@
         target_user: "{{ user_info.stdout | regex_search('^\\S+') }}"
       when: ansible_os_family == 'Darwin'
 
-    # - name: Set the user's shell to bash
-    #   ansible.builtin.user:
-    #     name: "{{ target_user }}"
-    #     shell: /bin/bash
-    #   when: target_user is defined and target_user | length > 0 and ansible_os_family == 'Darwin'
+    - name: Set the user's shell to bash
+      ansible.builtin.user:
+        name: "{{ target_user }}"
+        shell: /bin/bash
+      when: target_user is defined and target_user | length > 0 and ansible_os_family == 'Darwin'
+      become: true
