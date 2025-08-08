@@ -65,5 +65,4 @@
           if [ -f ~/.bashrc ]; then
             . ~/.bashrc
           fi
-
         mode: "0755"
