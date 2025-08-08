@@ -8,8 +8,9 @@ fi
 LIMA_VM_NAME="$1"
 limactl stop "$LIMA_VM_NAME"
 limactl delete "$LIMA_VM_NAME"
-limactl create --name="$LIMA_VM_NAME" template://default
-limactl start "$LIMA_VM_NAME"
+limactl create --name="$LIMA_VM_NAME" --yes
+limactl start "$LIMA_VM_NAME" --yes
+limactl shell "$LIMA_VM_NAME"
 
 
 ## EOF
