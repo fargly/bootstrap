@@ -27,11 +27,11 @@
       when: not ansible_os_family == 'Darwin'
 
     - name: Ensure the community.general collection is installed
-      ansible.builtin.command: uvx --from ansible-core ansible-galaxy collection install community.general
+      ansible.builtin.command: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy collection install community.general"
       args:
         # Prevents Ansible from re-running this task if the collection is already installed.
         # This is a basic form of idempotency.
-        creates: ~/.ansible/collections/ansible_collections/community/general
+        creates: "{{ ansible_env.HOME }}/.ansible/collections/ansible_collections/community/general"
 
     - name: Ensure Homebrew is installed
       ansible.builtin.shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
