@@ -5,13 +5,16 @@
 
   tasks:
 
+    - name: End the play on hosts that are not Linux
+      ansible.builtin.meta: end_play
+      when: not ansible_os_family == 'Darwin'
+
     ## macOS/Darwin Specific Tasks
     - name: Ensure Homebrew is installed
       ansible.builtin.shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       args:
         creates: /opt/homebrew/bin/brew
       become: false
-      when: ansible_os_family == 'Darwin'
       tags:
         - setup
 
@@ -28,7 +31,6 @@
         state: present
         update_homebrew: true
       become: false
-      when: ansible_os_family == 'Darwin'
       tags:
         - packages
 
@@ -36,16 +38,39 @@
       ansible.builtin.command: dscl . -search /Users UniqueID 501
       register: user_info
       changed_when: false # This is a lookup command, not a change
-      when: ansible_os_family == 'Darwin'
 
     - name: Extract username from command output
       ansible.builtin.set_fact:
         target_user: "{{ user_info.stdout | regex_search('^\\S+') }}"
-      when: ansible_os_family == 'Darwin'
+
+    # - name: Set the user's shell to bash
+    #   ansible.builtin.user:
+    #     name: "{{ target_user }}"
+    #     shell: /bin/bash
+    #   when: target_user is defined and target_user | length > 0 and ansible_os_family == 'Darwin'
+    #   become: true
+
+    - name: Get current shell for user
+      ansible.builtin.command: dscl . -read /Users/{{ target_user }} UserShell
+      register: shell_info
+      changed_when: false
+      when: target_user is defined and target_user | length > 0
+
+    - name: Parse dscl output
+      ansible.builtin.set_fact:
+        shell_info_parsed: >
+          {{ shell_info.stdout_lines | map('split', ': ', 1) | from_items }}
+
+    - name: Ensure the user's shell is bash
+      ansible.builtin.debug:
+        msg: "Current shell for user {{ target_user }} is {{ shell_info_parsed }}"
 
     - name: Set the user's shell to bash
-      ansible.builtin.user:
-        name: "{{ target_user }}"
-        shell: /bin/bash
-      when: target_user is defined and target_user | length > 0 and ansible_os_family == 'Darwin'
+      ansible.builtin.command: "chsh -s /bin/bash {{ target_user }}"
+      when:
+        - target_user is defined
+        - target_user | length > 0
+        - ansible_os_family == 'Darwin'
+        - "'/bin/bash' not in shell_info.stdout"
       become: true
+      # ignore_errors: true
