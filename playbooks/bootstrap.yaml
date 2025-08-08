@@ -42,32 +42,32 @@
       changed_when: false # This is a check, not a change
       when: collection_check.stdout == ''
 
-    # ## macOS/Darwin Specific Tasks
-    # - name: Ensure Homebrew is installed
-    #   ansible.builtin.shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    #   args:
-    #     creates: /opt/homebrew/bin/brew
-    #   become: false
-    #   when: ansible_os_family == 'Darwin'
-    #   tags:
-    #     - setup
+    ## macOS/Darwin Specific Tasks
+    - name: Ensure Homebrew is installed
+      ansible.builtin.shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      args:
+        creates: /opt/homebrew/bin/brew
+      become: false
+      when: ansible_os_family == 'Darwin'
+      tags:
+        - setup
 
-    # - name: Install specified Homebrew packages
-    #   community.general.homebrew:
-    #     name:
-    #       - bash-completion
-    #       - binutils
-    #       - htop
-    #       - tmux
-    #       - unzip
-    #       - git
-    #       - gnu-tar
-    #     state: present
-    #     update_homebrew: true
-    #   become: false
-    #   when: ansible_os_family == 'Darwin'
-    #   tags:
-    #     - packages
+    - name: Install specified Homebrew packages
+      community.general.homebrew:
+        name:
+          - bash-completion
+          - binutils
+          - htop
+          - tmux
+          - unzip
+          - git
+          - gnu-tar
+        state: present
+        update_homebrew: true
+      become: false
+      when: ansible_os_family == 'Darwin'
+      tags:
+        - packages
 
     - name: Find the username for UID 501
       ansible.builtin.command: dscl . -search /Users UniqueID 501
