@@ -19,7 +19,7 @@
         path: "{{ ansible_env.HOME }}/.bashrc"
         create: true
         mode: "0755"
-        regexp: '^.*$HOME/.local/bin:$PATH.*$'
+        regexp: '^.*PATH="$HOME/.local/bin:$PATH".*$'
         state: absent
 
     # - name: Remove the env file line
