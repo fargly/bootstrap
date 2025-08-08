@@ -61,20 +61,19 @@
     #     shell_info_parsed: >
     #       {{ shell_info.stdout_lines | map('split', ': ', 1) | from_items }}
 
-    - name: Extract current shell from dscl output
+    - name: Set boolean if current shell is bash
       ansible.builtin.set_fact:
-        current_shell: "{{ shell_info.stdout | regex_search('UserShell: (.+)', '\\1') }}"
+        current_shell_is_bash: "{{ (shell_info.stdout | regex_search('UserShell: (.+)', '\\1')) == '/bin/bash' }}"
 
-    - name: Ensure the user's shell is bash
-      ansible.builtin.debug:
-        msg: "Current shell for user {{ target_user }} is {{ current_shell }}"
+    # - name: Extract current shell from dscl output
+    #   ansible.builtin.set_fact:
+    #     current_shell: "{{ shell_info.stdout | regex_search('UserShell: (.+)', '\\1') }}"
+
+    # - name: Ensure the user's shell is bash
+    #   ansible.builtin.debug:
+    #     msg: "Current shell for user {{ target_user }} is {{ current_shell }}"
 
     - name: Set the user's shell to bash
       ansible.builtin.command: "chsh -s /bin/bash {{ target_user }}"
-      when:
-        - target_user is defined
-        - target_user | length > 0
-        - ansible_os_family == 'Darwin'
-        - "'/bin/bash' not in shell_info.stdout"
+      changed_when: not current_shell_is_bash
       become: true
-      # ignore_errors: true
