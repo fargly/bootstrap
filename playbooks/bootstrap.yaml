@@ -35,10 +35,11 @@
 
     - name: Ensure the community.general collection is installed
       ansible.builtin.command: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy collection install community.general"
-      args:
-        # Prevents Ansible from re-running this task if the collection is already installed.
-        # This is a basic form of idempotency.
-        creates: "{{ ansible_env.HOME }}/.ansible/collections/ansible_collections/community/general"
+        #   args:
+        #     # Prevents Ansible from re-running this task if the collection is already installed.
+        #     # This is a basic form of idempotency.
+        #     creates: "{{ ansible_env.HOME }}/.ansible/collections/ansible_collections/community/general"
+      changed_when: false # This is a check, not a change
       when: collection_check.stdout == ''
 
     # ## macOS/Darwin Specific Tasks
