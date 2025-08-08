@@ -55,6 +55,7 @@
         state: present
         update_homebrew: true
       become: false
+      when: ansible_os_family == 'Darwin'
       tags:
         - packages
 
