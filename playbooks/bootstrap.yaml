@@ -23,6 +23,7 @@
       vars:
         packages:
           - ssh
+          - git
           - curl
           - wget
           - bash-completion
