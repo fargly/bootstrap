@@ -23,6 +23,8 @@
       vars:
         packages:
           - ssh
+          - curl
+          - wget
           - bash-completion
           - binutils
           - dnsutils
