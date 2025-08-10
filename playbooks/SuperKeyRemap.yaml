@@ -6,8 +6,6 @@
   tasks:
     - name: Set key-remapping to right-alt
       ansible.builtin.command: gsettings set org.gnome.desktop.input-sources xkb-options "['altwin:swap_alt_win']"
-      args:
-        warn: no
 
     - name: Verify the setting has been applied
       ansible.builtin.command: gsettings get org.gnome.desktop.input-sources xkb-options
