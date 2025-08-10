@@ -1,0 +1,8 @@
+---
+- name: Change touchpad scrolling to classic
+  hosts: all
+  become: false
+  tasks:
+    - name: Set natural-scroll to false for touchpad
+      ansible.builtin.command: gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
+
