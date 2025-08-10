@@ -4,15 +4,38 @@
   become: yes  # This is often needed for system-wide configuration
 
   tasks:
-    - name: Set key-remapping to right-alt
-      ansible.builtin.command: gsettings set org.gnome.desktop.input-sources xkb-options "['altwin:swap_alt_win']"
-
-    - name: Verify the setting has been applied
-      ansible.builtin.command: gsettings get org.gnome.desktop.input-sources xkb-options
-      register: current_key_options
-      changed_when: false # This task doesn't change anything, it just checks
-
-    - name: Print the new key options
+    - name: Nothing
       ansible.builtin.debug:
-        msg: "Current key options are: {{ current_key_options.stdout }}"
+        msg: "Hello World"
 
+
+# Properties:
+# Testing ... (interrupt to exit)
+# Event: time 1754859095.307869, type 4 (EV_MSC), code 4 (MSC_SCAN), value db
+# Event: time 1754859095.307869, type 1 (EV_KEY), code 125 (KEY_LEFTMETA), value 1
+# Event: time 1754859095.307869, -------------- SYN_REPORT ------------
+# Event: time 1754859095.431689, type 4 (EV_MSC), code 4 (MSC_SCAN), value db
+# Event: time 1754859095.431689, type 1 (EV_KEY), code 125 (KEY_LEFTMETA), value 0
+# Event: time 1754859095.431689, -------------- SYN_REPORT ------------
+# Event: time 1754859098.966812, type 4 (EV_MSC), code 4 (MSC_SCAN), value db
+# Event: time 1754859098.966812, type 1 (EV_KEY), code 125 (KEY_LEFTMETA), value 1
+# Event: time 1754859098.966812, -------------- SYN_REPORT ------------
+# Event: time 1754859099.118187, type 4 (EV_MSC), code 4 (MSC_SCAN), value db
+# Event: time 1754859099.118187, type 1 (EV_KEY), code 125 (KEY_LEFTMETA), value 0
+# Event: time 1754859099.118187, -------------- SYN_REPORT ------------
+# Event: time 1754859102.045845, type 4 (EV_MSC), code 4 (MSC_SCAN), value b8
+# Event: time 1754859102.045845, type 1 (EV_KEY), code 100 (KEY_RIGHTALT), value 1
+# Event: time 1754859102.045845, -------------- SYN_REPORT ------------
+# Event: time 1754859102.222314, type 4 (EV_MSC), code 4 (MSC_SCAN), value b8
+# Event: time 1754859102.222314, type 1 (EV_KEY), code 100 (KEY_RIGHTALT), value 0
+# Event: time 1754859102.222314, -------------- SYN_REPORT ------------
+
+
+#
+#  /etc/udev/hwdb.d/99-custom-keyboard.hwdb
+#
+#  evdev:input:b*v*p*e*
+#   KEY_LEFTMETA=rightalt
+#
+#  sudo systemd-hwdb update
+#  sudo udevadm trigger
