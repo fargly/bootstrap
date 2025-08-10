@@ -6,7 +6,8 @@ Minimal Bootstraping Sequence using Webi/Uvx/Ansible
 ## macOS and Linux
 
 ```bash
-curl https://raw.githubusercontent.com/fargly/bootstrap/main/scripts/bootstrap.sh | sh
+URL="https://raw.githubusercontent.com/fargly/bootstrap/main/scripts/bootstrap.sh"
+which curl >/dev/null 2>/dev/null && curl "$URL" || wget -O- "$URL" | sh
 ```
 
 ## Forking Notes
