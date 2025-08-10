@@ -1,0 +1,20 @@
+---
+- name: Remap Super Key to Right Alt
+  hosts: your_ubuntu_hosts
+  become: yes  # This is often needed for system-wide configuration
+
+  tasks:
+    - name: Set key-remapping to right-alt
+      ansible.builtin.command: gsettings set org.gnome.desktop.input-sources xkb-options "['altwin:swap_alt_win']"
+      args:
+        warn: no
+
+    - name: Verify the setting has been applied
+      ansible.builtin.command: gsettings get org.gnome.desktop.input-sources xkb-options
+      register: current_key_options
+      changed_when: false # This task doesn't change anything, it just checks
+
+    - name: Print the new key options
+      ansible.builtin.debug:
+        msg: "Current key options are: {{ current_key_options.stdout }}"
+
