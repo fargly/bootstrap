@@ -1,6 +1,6 @@
 ---
 - name: Remap Super Key to Right Alt
-  hosts: your_ubuntu_hosts
+  hosts: localhost
   become: yes  # This is often needed for system-wide configuration
 
   tasks:
