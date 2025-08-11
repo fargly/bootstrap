@@ -23,9 +23,8 @@
       ansible.builtin.git:
         repo: 'https://github.com/WeirdTreeThing/chromebook-linux-audio'
         dest: "{{ ansible_env.HOME }}/.local/opt/chromebook-linux-audio"
-        version: master # Or a specific branch/tag if preferred
         update: yes # Pull latest changes if already cloned
-      args:
+      #args:
         # Use a `register` to capture the output for conditional execution of the next task
         # This isn't strictly necessary for `git` module but good practice for more complex tasks
         # register: git_clone_result
