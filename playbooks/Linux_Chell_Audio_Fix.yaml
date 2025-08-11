@@ -1,5 +1,43 @@
-
 ## Check if ansible_product_name = "Chell"
 ## If yes, Clone git repo: 'https://github.com/WeirdTreeThing/chromebook-linux-audio' into ~/.local/opt
 ## Run ./setup-audio from chromebook-linux-audio
+---
+- name: Setup Chromebook Linux Audio for Chell
+  hosts: all
+  gather_facts: yes # Ensure facts are gathered to access ansible_product_name
+  become: yes # Use sudo for potential system-level commands
+
+  tasks:
+    - name: Check if the system is "Chell"
+      ansible.builtin.debug:
+        msg: "System product name is {{ ansible_product_name }}"
+      when: ansible_product_name == "Chell"
+
+    - name: Ensure .local/opt directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_home }}/.local/opt"
+        state: directory
+        mode: '0755'
+      when: ansible_product_name == "Chell"
+
+    - name: Clone chromebook-linux-audio repository
+      ansible.builtin.git:
+        repo: 'https://github.com/WeirdTreeThing/chromebook-linux-audio'
+        dest: "{{ ansible_facts.user_home }}/.local/opt/chromebook-linux-audio"
+        version: master # Or a specific branch/tag if preferred
+        update: yes # Pull latest changes if already cloned
+      when: ansible_product_name == "Chell"
+      args:
+        # Use a `register` to capture the output for conditional execution of the next task
+        # This isn't strictly necessary for `git` module but good practice for more complex tasks
+        # register: git_clone_result
+
+    - name: Run ./setup-audio script
+      ansible.builtin.command: "{{ ansible_facts.user_home }}/.local/opt/chromebook-linux-audio/setup-audio"
+      # Change directory to the script's location for proper execution
+      args:
+        chdir: "{{ ansible_facts.user_home }}/.local/opt/chromebook-linux-audio"
+      when: ansible_product_name == "Chell"
+      # Consider adding `creates` or `removes` to make this task idempotent
+      # For example: creates: /path/to/a/file/created/by/setup-audio
 
