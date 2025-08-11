@@ -5,7 +5,7 @@
 - name: Setup Chromebook Linux Audio for Chell
   hosts: localhost
   gather_facts: yes # Ensure facts are gathered to access ansible_product_name
-  become: yes # Use sudo for potential system-level commands
+  home_dir: "{{ ansible_env.HOME }}"
 
   tasks:
 
@@ -30,10 +30,11 @@
         # register: git_clone_result
 
     - name: Run ./setup-audio script
-      ansible.builtin.command: "{{ ansible_env.HOME }}/.local/opt/chromebook-linux-audio/setup-audio"
+      ansible.builtin.command: "{{ home_dir }}/.local/opt/chromebook-linux-audio/setup-audio"
       # Change directory to the script's location for proper execution
       args:
-        chdir: "{{ ansible_env.HOME }}/.local/opt/chromebook-linux-audio"
+        chdir: "{{ home_dir }}/.local/opt/chromebook-linux-audio"
       # Consider adding `creates` or `removes` to make this task idempotent
       # For example: creates: /path/to/a/file/created/by/setup-audio
+      become: yes # Use sudo for potential task-level commands
 
