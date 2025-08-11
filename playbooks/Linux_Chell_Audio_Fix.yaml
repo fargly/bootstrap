@@ -8,36 +8,33 @@
   become: yes # Use sudo for potential system-level commands
 
   tasks:
-    - name: Check if the system is "Chell"
-      ansible.builtin.debug:
-        msg: "System product name is {{ ansible_product_name }}"
-      when: ansible_product_name == "Chell"
+
+    - name: End if Host is not Chell Architecture Chromebook
+      ansible.builtin.meta: end_play
+      when: not ansible_product_name == "Chell"
 
     - name: Ensure .local/opt directory exists
       ansible.builtin.file:
-        path: "{{ ansible_facts.user_home }}/.local/opt"
+        path: "{{ ansible_env.HOME }}/.local/opt"
         state: directory
         mode: '0755'
-      when: ansible_product_name == "Chell"
 
     - name: Clone chromebook-linux-audio repository
       ansible.builtin.git:
         repo: 'https://github.com/WeirdTreeThing/chromebook-linux-audio'
-        dest: "{{ ansible_facts.user_home }}/.local/opt/chromebook-linux-audio"
+        dest: "{{ ansible_env.HOME }}/.local/opt/chromebook-linux-audio"
         version: master # Or a specific branch/tag if preferred
         update: yes # Pull latest changes if already cloned
-      when: ansible_product_name == "Chell"
       args:
         # Use a `register` to capture the output for conditional execution of the next task
         # This isn't strictly necessary for `git` module but good practice for more complex tasks
         # register: git_clone_result
 
     - name: Run ./setup-audio script
-      ansible.builtin.command: "{{ ansible_facts.user_home }}/.local/opt/chromebook-linux-audio/setup-audio"
+      ansible.builtin.command: "{{ ansible_env.HOME }}/.local/opt/chromebook-linux-audio/setup-audio"
       # Change directory to the script's location for proper execution
       args:
-        chdir: "{{ ansible_facts.user_home }}/.local/opt/chromebook-linux-audio"
-      when: ansible_product_name == "Chell"
+        chdir: "{{ ansible_env.HOME }}/.local/opt/chromebook-linux-audio"
       # Consider adding `creates` or `removes` to make this task idempotent
       # For example: creates: /path/to/a/file/created/by/setup-audio
 
