@@ -3,7 +3,7 @@
 ## Run ./setup-audio from chromebook-linux-audio
 ---
 - name: Setup Chromebook Linux Audio for Chell
-  hosts: all
+  hosts: localhost
   gather_facts: yes # Ensure facts are gathered to access ansible_product_name
   become: yes # Use sudo for potential system-level commands
 
