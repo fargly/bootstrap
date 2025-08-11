@@ -1,0 +1,5 @@
+
+## Check if ansible_product_name = "Chell"
+## If yes, Clone git repo: 'https://github.com/WeirdTreeThing/chromebook-linux-audio' into ~/.local/opt
+## Run ./setup-audio from chromebook-linux-audio
+
