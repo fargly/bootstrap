@@ -36,6 +36,7 @@
 #
 #  evdev:input:b*v*p*e*
 #   KEY_LEFTMETA=rightalt
+#   KEYBOARD_KEY_db=rightalt
 #
 #  sudo systemd-hwdb update
 #  sudo udevadm trigger
