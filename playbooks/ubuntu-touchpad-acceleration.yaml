@@ -3,7 +3,7 @@
   hosts: localhost
   become: yes  # Required to run commands as root if needed, but 'dconf' is often run as the user.
   vars:
-    touchpad_acceleration_value: '0.65' # You can change this value
+    touchpad_acceleration_value: '0.40' # You can change this value
   tasks:
     - name: Ensure 'dconf' is installed
       ansible.builtin.package:
