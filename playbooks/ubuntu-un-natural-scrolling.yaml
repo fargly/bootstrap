@@ -1,6 +1,6 @@
 ---
 - name: Change touchpad scrolling to classic
-  hosts: all
+  hosts: localhost
   become: false
   tasks:
     - name: Set natural-scroll to false for touchpad
