@@ -9,7 +9,7 @@ mkdir -p $HOME/.local/bin
 wget -O- https://astral.sh/uv/install.sh | sh
 
 # Run Ansible Bootstrap Playbook ########################################### #
-curl https://raw.githubusercontent.com/fargly/bootstrap/main/playbooks/bootstrap.yaml | \
+ wget -O- https://raw.githubusercontent.com/fargly/bootstrap/main/playbooks/bootstrap.yaml | \
     $HOME/.local/bin/uvx --from ansible-core ansible-playbook --ask-become-pass /dev/stdin
 
 ## EOF
