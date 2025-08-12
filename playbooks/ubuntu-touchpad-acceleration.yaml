@@ -1,6 +1,6 @@
 ---
 - name: Adjust touchpad acceleration
-  hosts: your_target_hosts
+  hosts: localhost
   become: yes  # Required to run commands as root if needed, but 'dconf' is often run as the user.
   vars:
     touchpad_acceleration_value: '0.65' # You can change this value
