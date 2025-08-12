@@ -5,7 +5,8 @@
 - name: Setup Chromebook Linux Audio for Chell
   hosts: localhost
   gather_facts: yes # Ensure facts are gathered to access ansible_product_name
-  home_dir: "{{ ansible_env.HOME }}"
+  vars:
+    home_dir: "{{ ansible_env.HOME }}"
 
   tasks:
 

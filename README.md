@@ -17,3 +17,5 @@ I'm not currently in an Enterprise environment so bootstrapping is very PULL ori
 
 ## Notes
 * All tasks in bootstrap hierarchy that require privilege are tagged 'privileged'. You may issue a '--skip-tags "privileged"' argument to run all tasks in a playbook that don't require privilege.
+* Every Effort is Made to Use Sane Defaults on a Raw System Install
+
