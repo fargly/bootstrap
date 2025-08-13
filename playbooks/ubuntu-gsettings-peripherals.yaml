@@ -46,6 +46,6 @@
 
     - name: Display peripheral settings
       ansible.builtin.debug:
-        # msg: "{{ peripheral_settings.stdout_lines | regex_search('^.*(natural-scroll|speed).*$') }}"
-        msg: "{{ peripheral_settings.stdout | regex_search('^.*(natural-scroll|speed).*$') }}"
-        # join('\n') }}"
+        msg: "{{ item }}"
+      with_items: "{{ peripheral_settings.stdout_lines }}"
+      when: "'speed' in item or 'natural-scroll' in item"
