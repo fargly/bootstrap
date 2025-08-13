@@ -11,6 +11,7 @@
     #   when: not ansible_product_name == "Chell"
 
     - name: Ensure 'dconf' is installed
+      tags: privileged
       ansible.builtin.package:
         name: dconf-cli
         state: present
