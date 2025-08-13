@@ -4,7 +4,7 @@
 ---
 - name: Setup Chromebook Linux Audio for Chell
   hosts: localhost
-  gather_facts: yes # Ensure facts are gathered to access ansible_product_name
+  gather_facts: true
   vars:
     home_dir: "{{ ansible_env.HOME }}"
 
@@ -24,11 +24,8 @@
       ansible.builtin.git:
         repo: 'https://github.com/WeirdTreeThing/chromebook-linux-audio'
         dest: "{{ ansible_env.HOME }}/.local/opt/chromebook-linux-audio"
-        update: yes # Pull latest changes if already cloned
-      #args:
-        # Use a `register` to capture the output for conditional execution of the next task
-        # This isn't strictly necessary for `git` module but good practice for more complex tasks
-        # register: git_clone_result
+        version: main
+        update: true
 
     - name: Run ./setup-audio script
       ansible.builtin.command: "{{ home_dir }}/.local/opt/chromebook-linux-audio/setup-audio"
@@ -37,5 +34,5 @@
         chdir: "{{ home_dir }}/.local/opt/chromebook-linux-audio"
       # Consider adding `creates` or `removes` to make this task idempotent
       # For example: creates: /path/to/a/file/created/by/setup-audio
-      become: yes # Use sudo for potential task-level commands
-
+      become: true
+      changed_when: false
