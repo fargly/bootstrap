@@ -6,9 +6,9 @@
   vars:
     peripheral_acceleration_value: '0.40' # You can change this value
   tasks:
-    # - name: End if Host is not Linux/Gnome
-    #   ansible.builtin.meta: end_play
-    #   when: not ansible_product_name == "Chell"
+    - name: End if Host is not Ubuntu
+      ansible.builtin.meta: end_play
+      when: not ansible_distribution == "Ubuntu"
 
     - name: Ensure 'dconf' is installed
       tags: privileged
