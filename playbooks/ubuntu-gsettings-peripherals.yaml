@@ -47,5 +47,6 @@
     - name: Display peripheral settings
       ansible.builtin.debug:
         msg: "{{ item }}"
-      with_items: "{{ peripheral_settings.stdout_lines }}"
-      when: "'speed' in item or 'natural-scroll' in item"
+      loop: "{{ peripheral_settings.stdout_lines | select('search', 'touchpad speed|mouse speed|touchpad natural-scroll') | list }}"
+      loop_control:
+        label: "{{ item }}"
