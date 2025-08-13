@@ -10,33 +10,25 @@
     #   ansible.builtin.meta: end_play
     #   when: not ansible_product_name == "Chell"
 
-    # - name: Ensure 'dconf' is installed
-    #   ansible.builtin.package:
-    #     name: dconf-cli
-    #     state: present
-    #   become: true  # Required to run commands as root if needed, but 'dconf' is often run as the user.
+    - name: Ensure 'dconf' is installed
+      ansible.builtin.package:
+        name: dconf-cli
+        state: present
+      become: true  # Required to run commands as root if needed, but 'dconf' is often run as the user.
 
-    # - name: Set touchpad acceleration
-    #   ansible.builtin.command:
-    #     cmd: "gsettings set org.gnome.desktop.peripherals.touchpad speed {{ peripheral_acceleration_value }}"
-    #   # environment:
-    #   #   XDG_CURRENT_DESKTOP: "GNOME"
-    #   #   DBUS_SESSION_BUS_ADDRESS: "{{ lookup('env', 'DBUS_SESSION_BUS_ADDRESS') }}"
-    #   # register: set_speed_result
-    #   changed_when: false
+    - name: Set touchpad acceleration
+      ansible.builtin.command:
+        cmd: "gsettings set org.gnome.desktop.peripherals.touchpad speed {{ peripheral_acceleration_value }}"
+      changed_when: false
 
-    # - name: Set mouse acceleration
-    #   ansible.builtin.command:
-    #     cmd: "gsettings set org.gnome.desktop.peripherals.mouse speed {{ peripheral_acceleration_value }}"
-    #   changed_when: false
+    - name: Set mouse acceleration
+      ansible.builtin.command:
+        cmd: "gsettings set org.gnome.desktop.peripherals.mouse speed {{ peripheral_acceleration_value }}"
+      changed_when: false
 
-    # # - name: Display result of setting acceleration
-    # #   ansible.builtin.debug:
-    # #     msg: "Touchpad acceleration set to {{ peripheral_acceleration_value }}. Command output: {{ set_speed_result.stdout }}"
-
-    # - name: Set natural-scroll to false for touchpad
-    #   ansible.builtin.command: gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
-    #   changed_when: false
+    - name: Set natural-scroll to false for touchpad
+      ansible.builtin.command: gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
+      changed_when: false
 
     - name: Report Settings Gnome
       ansible.builtin.command:
