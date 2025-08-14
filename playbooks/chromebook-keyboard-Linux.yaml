@@ -1,7 +1,51 @@
 ---
-
 ## Reset /usr/share/X11/xkb Directory Hierarchy
 ## sudo apt --reinstall install xkb-data
 #
 #
 #
+- name: Modify Chromebook Keyboard XKB for Linux Use
+  hosts: localhost
+  gather_facts: true
+
+  vars:
+    peripheral_acceleration_value: '0.40' # You can change this value
+
+##   tasks:
+##     - name: End if Host is not Ubuntu
+##       ansible.builtin.meta: end_play
+##       when: not ansible_distribution == "Ubuntu"
+## 
+##     - name: Ensure 'dconf' is installed
+##       tags: privileged
+##       ansible.builtin.package:
+##         name: dconf-cli
+##         state: present
+##       become: true  # Required to run commands as root if needed, but 'dconf' is often run as the user.
+## 
+##     - name: Set touchpad acceleration
+##       ansible.builtin.command:
+##         cmd: "gsettings set org.gnome.desktop.peripherals.touchpad speed {{ peripheral_acceleration_value }}"
+##       changed_when: false
+## 
+##     - name: Set mouse acceleration
+##       ansible.builtin.command:
+##         cmd: "gsettings set org.gnome.desktop.peripherals.mouse speed {{ peripheral_acceleration_value }}"
+##       changed_when: false
+## 
+##     - name: Set natural-scroll to false for touchpad
+##       ansible.builtin.command: gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
+##       changed_when: false
+## 
+##     - name: Report Settings Gnome
+##       ansible.builtin.command:
+##         cmd: "gsettings list-recursively org.gnome.desktop.peripherals"
+##       register: peripheral_settings
+##       changed_when: false
+## 
+##     - name: Display peripheral settings
+##       ansible.builtin.debug:
+##         msg: "{{ item }}"
+##       loop: "{{ peripheral_settings.stdout_lines | select('search', 'touchpad speed|mouse speed|touchpad natural-scroll') | list }}"
+##       loop_control:
+##         label: "{{ item }}"
