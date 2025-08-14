@@ -1,7 +1,7 @@
 ---
 ## Reset /usr/share/X11/xkb Directory Hierarchy
 ## sudo apt --reinstall install xkb-data
-#
+# Clone Repo:  git clone https://github.com/optio50/ChromeBook-Keyboard-xkb
 #
 #
 - name: Modify Chromebook Keyboard XKB for Linux Use
