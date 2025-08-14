@@ -1,0 +1,7 @@
+---
+
+## Reset /usr/share/X11/xkb Directory Hierarchy
+## sudo apt --reinstall install xkb-data
+#
+#
+#
