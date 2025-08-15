@@ -1,6 +1,6 @@
 ---
 - name: Disable automatic updates on Ubuntu servers
-  hosts: localhosts
+  hosts: localhost
   become: true
   gather_facts: yes
 
