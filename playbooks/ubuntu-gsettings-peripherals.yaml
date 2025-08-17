@@ -31,6 +31,10 @@
       ansible.builtin.command: gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
       changed_when: false
 
+    - name: Remap CapsLock as Ctrl Key
+      ansible.builtin.command: gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier']"
+      changed_when: false
+
     - name: Report Settings Gnome
       ansible.builtin.command:
         cmd: "gsettings list-recursively org.gnome.desktop.peripherals"
@@ -43,3 +47,13 @@
       loop: "{{ peripheral_settings.stdout_lines | select('search', 'touchpad speed|mouse speed|touchpad natural-scroll') | list }}"
       loop_control:
         label: "{{ item }}"
+
+
+
+
+
+
+
+
+
+
