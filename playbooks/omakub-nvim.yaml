@@ -1,0 +1,36 @@
+---
+- name: Apply/Ensure Configuation Changes to Omakub
+  hosts: localhost
+  gather_facts: true
+  vars:
+    target_file: "{{ ansible_env.HOME }}/.config/nvim/lua/config/options.lua"  # The file to modify
+    option_line: "vim.opt.relativenumber = false"
+    desired_line: "vim.opt.relativenumber = true"
+
+  tasks:
+    ## NVIM Configuration Tasks
+    - name: Check if the target file exists
+      ansible.builtin.stat:
+        path: "{{ target_file }}"
+      register: file_stat
+
+    - name: Set the option to true if the file exists and contains the option
+      ansible.builtin.lineinfile:
+        path: "{{ target_file }}"
+        regexp: "^{{ option_line | regex_escape }}$" # Regex to match the exact option line
+        line: "{{ desired_line }}"
+        state: present
+        backup: true
+      when: file_stat.stat.exists and file_stat.stat.isreg # Only run if file exists and is a regular file
+
+#   notify: Restart Service # Optional: Add a handler to restart a service if changes are made
+##       nvim --headless -c "echo stdpath('config')"
+## cat options.lua
+## -- Options are automatically loaded before lazy.nvim startup
+## -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
+## -- Add any additional options here
+## vim.opt.relativenumber = false
+##  pwd
+## /home/fargly/.config/nvim/lua/config
+
+            # {{ ansible_env.HOME }}/.vault_pass.txt"
