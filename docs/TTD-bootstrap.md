@@ -23,5 +23,22 @@ tags: []
 1. Install yt-dlp and Support Scripting
 1. Add 'uv' Utility Support Scripting
 1. Install 'lima' Virtualization
+1. Catalog Installation Directories for CurlPipeShell Installs
+
+## Starship
+
+```bash
+curl -sS https://starship.rs/install.sh | BIN_DIR="$HOME/.local/bin"  sh
+starship preset tokyo-night -o ~/.config/starship.toml
+#Add/Ensure Init Line
+#Add/Ensure Completions Line
+```
+
+
+## Tailscale
+ 1. Curl Pipe Script
+ 1. Ansible Repo Setup
+ 1. Ansible Package Install
+
 
 
