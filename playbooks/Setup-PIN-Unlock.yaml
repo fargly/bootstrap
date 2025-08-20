@@ -1,0 +1,30 @@
+---
+- name: Setup PIN Unlock
+  hosts: localhost
+  connection: local
+  # vars:
+  #   uvx: "{{ ansible_env.HOME }}/.local/bin/uvx"
+  #   ansible_playbook: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
+  #   ansible_galaxy: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
+
+  vars_files:
+    - secrets.yaml.vault # This line tells Ansible to load variables from vault.yml
+
+  tasks:
+    - name: Update cache and upgrade packages using generic package manager
+      become: true
+      ansible.builtin.package:
+        upgrade: true
+        update_cache: true
+      tags: privileged
+      when: not ansible_os_family == 'Darwin'
+
+    - name: Install packages
+      become: true
+      ansible.builtin.package:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - libpam-pwdfile
+      tags: privileged
+      when: not ansible_os_family == 'Darwin'
