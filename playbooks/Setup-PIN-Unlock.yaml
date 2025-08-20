@@ -2,10 +2,7 @@
 - name: Setup PIN Unlock
   hosts: localhost
   connection: local
-  # vars:
-  #   uvx: "{{ ansible_env.HOME }}/.local/bin/uvx"
-  #   ansible_playbook: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
-  #   ansible_galaxy: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
+  gather_facts: true
 
   vars_files:
     - secrets.yaml.vault # This line tells Ansible to load variables from vault.yml
@@ -26,5 +23,31 @@
       vars:
         packages:
           - libpam-pwdfile
+          - whois
       tags: privileged
       when: not ansible_os_family == 'Darwin'
+
+    - name: Write PIN Password to file
+      become: true
+      ansible.builtin.copy:
+        content: "{{ Desktop_PIN_Entry }}"
+        dest: "/etc/custompinfile"
+        mode: '0600'
+      no_log: true
+
+    - name: Check if the target file exists
+      ansible.builtin.stat:
+        path: "/etc/pam.d/gdm-password"
+      register: file_stat
+
+    - name: Add custom PIN unlock configuration
+      become: true
+      vars:
+        option_line: "auth sufficient pam_pwdfile.so pwdfile=/etc/custompinfile"
+      ansible.builtin.lineinfile:
+        path: "/etc/pam.d/gdm-password"
+        # regexp: "^{{ option_line | regex_escape }}$" # Regex to match the exact option line
+        line: "{{ option_line }}"
+        state: present
+        backup: true
+      when: file_stat.stat.exists and file_stat.stat.isreg # Only run if file exists and is a regular file
