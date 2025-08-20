@@ -35,6 +35,10 @@
       ansible.builtin.command: gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier']"
       changed_when: false
 
+    - name: Set idle screen timeout
+      ansible.builtin.command: gsettings set org.gnome.desktop.session idle-delay 1800
+      changed_when: false
+
     - name: Report Settings Gnome
       ansible.builtin.command:
         cmd: "gsettings list-recursively org.gnome.desktop.peripherals"
@@ -48,12 +52,11 @@
       loop_control:
         label: "{{ item }}"
 
+    - name: Install hidetopbar extension
+      ansible.builtin.command:
+        cmd: "uvx gnome-extensions-cli install hidetopbar@mathieu.bidon.ca"
+      register: peripheral_settings
+      changed_when: false
 
-
-
-
-
-
-
-
-
+# Additional Gsettings
+# gsettings set org.gnome.shell.extensions.tactile gap-size 8
