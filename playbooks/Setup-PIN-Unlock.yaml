@@ -35,19 +35,11 @@
         mode: '0600'
       no_log: true
 
-    - name: Check if the target file exists
-      ansible.builtin.stat:
-        path: "/etc/pam.d/gdm-password"
-      register: file_stat
-
-    - name: Add custom PIN unlock configuration
+    - name: Ensure line is present after specified string
       become: true
       vars:
         option_line: "auth sufficient pam_pwdfile.so pwdfile=/etc/custompinfile"
-      ansible.builtin.lineinfile:
-        path: "/etc/pam.d/gdm-password"
-        # regexp: "^{{ option_line | regex_escape }}$" # Regex to match the exact option line
-        line: "{{ option_line }}"
-        state: present
-        backup: true
-      when: file_stat.stat.exists and file_stat.stat.isreg # Only run if file exists and is a regular file
+      ansible.builtin.blockinfile:
+        path: /etc/pam.d/gdm-password
+        insertafter: '#%PAM-1.0'
+        block: "{{ option_line }}"
