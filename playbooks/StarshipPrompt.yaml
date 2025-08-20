@@ -1,0 +1,82 @@
+---
+- name: Setup Starship Prompt
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  # vars_files:
+  #   - secrets.yaml.vault # This line tells Ansible to load variables from vault.yml
+
+  vars:
+    starship_config_path: "{{ ansible_env.HOME }}/.config/starship.toml"
+    starship_install_script_url: "https://starship.rs/install.sh"
+    starship_install_script_tempfile: "/tmp/starship_install.sh"
+    starship_binary_path: "{{ ansible_env.HOME }}/.local/bin"
+
+  tasks:
+
+    - name: Download the script if it doesn't exist or isn't executable
+      # when: not script_stat.stat.exists or not script_stat.stat.executable
+      ansible.builtin.get_url:
+        url: "{{ starship_install_script_url }}"
+        dest: "{{ starship_install_script_tempfile }}"
+        mode: '0755'
+
+    - name: Execute the script
+      when: not script_stat.stat.exists or not script_stat.stat.executable
+      ansible.builtin.shell: "{{ temp_script_path }}"
+      environment:
+        BIN_DIR: {{ starship_binary_path }}
+      register: script_output
+      changed_when: true
+# ---
+# - name: Example playbook
+#   hosts: all
+#   tasks:
+#     - name: Set environment variable
+#       ansible.builtin.shell: echo $MY_ENV_VAR
+#       environment:
+#         MY_ENV_VAR: my_value # <- Sets an environment variable with the environment keyword.
+
+    # "-b, --bin-dir" "Override the bin installation directory [default: ${BIN_DIR}]" \
+
+    # - name: Update cache and upgrade packages using generic package manager
+    #   become: true
+    #   ansible.builtin.package:
+    #     upgrade: true
+    #     update_cache: true
+    #   tags: privileged
+    #   when: not ansible_os_family == 'Darwin'
+
+    # - name: Install packages
+    #   become: true
+    #   ansible.builtin.package:
+    #     name: "{{ packages }}"
+    #   vars:
+    #     packages:
+    #       - libpam-pwdfile
+    #       - whois
+    #   tags: privileged
+    #   when: not ansible_os_family == 'Darwin'
+
+    # - name: Write PIN Password to file
+    #   become: true
+    #   ansible.builtin.copy:
+    #     content: "{{ Desktop_PIN_Entry }}"
+    #     dest: "/etc/custompinfile"
+    #     mode: '0600'
+    #   no_log: true
+
+    # - name: Ensure line is present after specified string
+    #   become: true
+    #   vars:
+    #     option_line: "auth sufficient pam_pwdfile.so pwdfile=/etc/custompinfile"
+    #   ansible.builtin.blockinfile:
+    #     path: /etc/pam.d/gdm-password
+    #     insertafter: '#%PAM-1.0'
+    #     block: "{{ option_line }}"
+
+    # - name: Remove temporary script if present
+    #   ansible.builtin.file:
+    #     path: "{{ starship_install_script_tempfile }}"
+    #     state: absent

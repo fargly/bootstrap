@@ -16,7 +16,7 @@ tags: []
 1. Add markdown plugins
 1. Add LookMark
 1. Add supplemental packages
-1. Add Charm utilies: glow, mods, 
+1. Add Charm utilies: glow, mods,
 1. Add Gemini CLI Stub
 1. Add CB Crush
 1. Manage API Keys
@@ -24,6 +24,8 @@ tags: []
 1. Add 'uv' Utility Support Scripting
 1. Install 'lima' Virtualization
 1. Catalog Installation Directories for CurlPipeShell Installs
+1. X Setup PIN Unlock for Gnome Desktop
+1. X Setup/Config Starship Prompt
 
 ## Starship
 
@@ -34,11 +36,8 @@ starship preset tokyo-night -o ~/.config/starship.toml
 #Add/Ensure Completions Line
 ```
 
-
 ## Tailscale
+
  1. Curl Pipe Script
  1. Ansible Repo Setup
  1. Ansible Package Install
-
-
-
