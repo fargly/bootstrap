@@ -60,3 +60,4 @@
 
 # Additional Gsettings
 # gsettings set org.gnome.shell.extensions.tactile gap-size 8
+# gsettings set org.gnome.shell. terminal color scheme 'Gnome Dark'
