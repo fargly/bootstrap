@@ -4,9 +4,6 @@
   connection: local
   gather_facts: true
 
-  # vars_files:
-  #   - secrets.yaml.vault # This line tells Ansible to load variables from vault.yml
-
   vars:
     starship_config_path: "{{ ansible_env.HOME }}/.config/starship.toml"
     starship_install_script_url: "https://starship.rs/install.sh"
@@ -82,13 +79,15 @@
     - name: Make starship config active plus Standard
       vars:
         config_block: |
-          ## User Defined Configurations
+          ##################################################
+          ##### User Defined Configurations ################
           set -o vi
           alias ltr="eza -l --sort oldest -r"
           eval "$(uv generate-shell-completion bash)"
           eval "$(uvx --generate-shell-completion bash)"
 
-          ## Starship Prompt Initialization
+          ##################################################
+          ##### Starship Prompt Initialization #############
           eval "$(starship init bash)"
           eval "$(starship completions bash)"
 

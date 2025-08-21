@@ -27,15 +27,6 @@ tags: []
 1. X Setup PIN Unlock for Gnome Desktop
 1. X Setup/Config Starship Prompt
 
-## Starship
-
-```bash
-curl -sS https://starship.rs/install.sh | BIN_DIR="$HOME/.local/bin"  sh
-starship preset tokyo-night -o ~/.config/starship.toml
-#Add/Ensure Init Line
-#Add/Ensure Completions Line
-```
-
 ## Tailscale
 
  1. Curl Pipe Script
