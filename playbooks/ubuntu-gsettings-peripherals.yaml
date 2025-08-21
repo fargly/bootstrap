@@ -39,10 +39,12 @@
       ansible.builtin.command: gsettings set org.gnome.desktop.session idle-delay 1800
       changed_when: false
 
-    - name: Set idle timeout for Suspend 1
-      ansible.builtin.command: |
-        gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'suspend'
-        gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 7200
+    - name: Set idle timeout for Suspend Activate
+      ansible.builtin.command: gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'suspend'
+      changed_when: false
+
+    - name: Set idle timeout for Suspend Set Timeout
+      ansible.builtin.command: gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 7200
       changed_when: false
 
     - name: Report Settings Gnome
