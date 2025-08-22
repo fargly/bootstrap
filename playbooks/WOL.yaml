@@ -1,0 +1,49 @@
+---
+- name: Wake On Lan Setup
+  hosts: localhost
+  gather_facts: true
+
+  tasks:
+    - name: WOL Debug
+      ansible.builtin.debug:
+        msg: "This is the stub for Setting WOL Services"
+
+## ❯ nmcli connection show
+## NAME            UUID                                  TYPE      DEVICE     
+## netplan-enp7s0  face7d1b-6a6a-3f7f-88d6-f390899cc383  ethernet  enp7s0     
+## tailscale0      f4403883-2ac5-489a-b93f-5b7b63e67876  tun       tailscale0 
+## lo              e51b85b3-ebd1-4028-9de3-d975f0be9b51  loopback  lo         
+## docker0         76aa3869-a952-4a72-ab68-65bea72b932f  bridge    docker0    
+## 
+## ░▒▓ fargly@ryz7grendel  ~   10:41  
+## ❯ sudo nmcli connection modify "Connection Name" 802-3-ethernet.wake-on-lan magic
+## Error: unknown connection 'Connection Name'.
+## 
+## ░▒▓ fargly@ryz7grendel  ~   10:41  
+## ❯ sudo nmcli connection modify netplan-enp7s0 802-3-ethernet.wake-on-lan magic
+## 
+## ░▒▓ fargly@ryz7grendel  ~   10:42  
+## ❯ sudo ethtool enp7s0 | grep 'Wake-on'
+## 	Supports Wake-on: pumbg
+## 	Wake-on: d
+## 
+## ░▒▓ fargly@ryz7grendel  ~   10:42  
+## ❯ nmcli connection show
+## NAME            UUID                                  TYPE      DEVICE     
+## netplan-enp7s0  face7d1b-6a6a-3f7f-88d6-f390899cc383  ethernet  enp7s0     
+## tailscale0      f4403883-2ac5-489a-b93f-5b7b63e67876  tun       tailscale0 
+## lo              e51b85b3-ebd1-4028-9de3-d975f0be9b51  loopback  lo         
+## docker0         76aa3869-a952-4a72-ab68-65bea72b932f  bridge    docker0    
+## 
+## ░▒▓ fargly@ryz7grendel  ~   10:42  
+## ❯ sudo nmcli connection up netplan-enp7s0
+## Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/5)
+## 
+## ░▒▓ fargly@ryz7grendel  ~   10:43  
+## ❯ sudo ethtool enp7s0 | grep 'Wake-on'
+## 	Supports Wake-on: pumbg
+## 	Wake-on: g
+## 
+## ░▒▓ fargly@ryz7grendel  ~   10:43  
+## ❯ 
+
