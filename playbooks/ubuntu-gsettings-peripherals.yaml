@@ -47,6 +47,14 @@
       ansible.builtin.command: gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 7200
       changed_when: false
 
+    - name: Set Terminal Theme
+      ansible.builtin.command: gsettings set org.gnome.Terminal.Legacy.Settings theme-variant 'dark'
+      changed_when: false
+
+    - name: Set Tactile Gap
+      ansible.builtin.command: gsettings set org.gnome.shell.extensions.tactile gap-size 8
+      changed_when: false
+
     - name: Report Settings Gnome
       ansible.builtin.command:
         cmd: "gsettings list-recursively org.gnome.desktop.peripherals"
@@ -66,6 +74,3 @@
       register: peripheral_settings
       changed_when: false
 
-# Additional Gsettings
-# gsettings set org.gnome.shell.extensions.tactile gap-size 8
-# gsettings set org.gnome.shell. terminal color scheme 'Gnome Dark'
