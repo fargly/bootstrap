@@ -55,6 +55,18 @@
       ansible.builtin.command: gsettings set org.gnome.shell.extensions.tactile gap-size 8
       changed_when: false
 
+    - name: Set Terminal Hotkey
+      ansible.builtin.command: gsettings set org.gnome.settings-daemon.plugins.media-keys terminal "['<Alt>t']"
+      changed_when: false
+
+    - name: Set Window Maximumization Toggle
+      ansible.builtin.command: gsettings set org.gnome.desktop.wm.keybindings toggle-maximized "['<Alt>z']"
+      changed_when: false
+
+    - name: Set Window Minimumization
+      ansible.builtin.command: gsettings set org.gnome.desktop.wm.keybindings minimize "['<Alt>a']"
+      changed_when: false
+
     - name: Report Settings Gnome
       ansible.builtin.command:
         cmd: "gsettings list-recursively org.gnome.desktop.peripherals"
