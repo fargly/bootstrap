@@ -1,7 +1,6 @@
 ---
 - name: Setup Starship Prompt
   hosts: localhost
-  connection: local
   gather_facts: true
 
   vars:

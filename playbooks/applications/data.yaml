@@ -1,0 +1,11 @@
+vars:
+  applications:
+    - name: "starship"
+      playbook: "applications/starship_prompt.yaml"
+      description: "A cross-shell prompt written in Rust."
+      # repo: 
+      configpath: "{{ ansible_env.HOME }}/.config/starship.toml"
+      installpath: "{{ ansible_env.HOME }}/.local/bin"
+      installscripturl: "https://starship.rs/install.sh"
+    starship_install_script_tempfile: "/tmp/starship_install.sh"
+    starship_binary: "{{ ansible_env.HOME }}/.local/bin/starship"
