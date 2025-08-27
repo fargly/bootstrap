@@ -54,15 +54,27 @@
       changed_when: false
 
     - name: Set Terminal Theme Use
-      ansible.builtin.command: "gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:{{ terminal_profile.stdout }}/ use-theme-colors false"
+      ansible.builtin.command: |
+        gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:{{ terminal_profile.stdout }}/ use-theme-colors false
       changed_when: false
 
     - name: Set Terminal Theme
       ansible.builtin.command: gsettings set org.gnome.Terminal.Legacy.Settings theme-variant 'dark'
       changed_when: false
 
+    - name: Register Terminal Profile
+      ansible.builtin.command:
+        cmd: "gsettings list-recursively"
+      register: tactile_gsettings
+      changed_when: false
+
+    - name: Check for a search match and set a boolean fact
+      ansible.builtin.set_fact:
+        is_tactile_enabled: "{{ (tactile_gsettings | select('search', 'tactile')) | length > 0 }}"
+
     - name: Set Tactile Gap
       ansible.builtin.command: gsettings set org.gnome.shell.extensions.tactile gap-size 8
+      when: is_tactile_enabled
       changed_when: false
 
     - name: Set Terminal Hotkey
@@ -95,4 +107,3 @@
         cmd: "uvx gnome-extensions-cli install hidetopbar@mathieu.bidon.ca"
       register: peripheral_settings
       changed_when: false
-
