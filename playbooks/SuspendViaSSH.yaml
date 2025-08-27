@@ -1,0 +1,39 @@
+---
+- name: Enhance Suspend Support on Linux
+  hosts: localhost
+  gather_facts: true
+
+  vars:
+    localbin: "{{ ansible_env.HOME }}/.local/bin"
+    # localnvim: "{{ ansible_env.HOME }}/.local/opt/nvim"
+
+  tasks:
+
+    - name: Non-Linux Bailout
+      ansible.builtin.meta: end_play
+      when: not ansible_facts['system'] == "Linux"
+
+    - name: Ensure SuspendNow script
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.local/bin/SuspendNow"
+        content: |
+          #!/usr/bin/env bash
+
+          nohup dbus-send --system --print-reply --dest=org.freedesktop.login1 \
+          /org/freedesktop/login1 org.freedesktop.login1.Manager.Suspend boolean:true >/dev/null 2>&1 &
+          exit 0
+
+          ## EOF
+        mode: "0755"
+
+    - name: Ensure Remote Suspension policy
+      become: true
+      ansible.builtin.copy:
+        dest: "/etc/polkit-1/rules.d/99-suspend-by-group.rules"
+        content: |
+          polkit.addRule(function(action, subject) {
+            if (action.id == "org.freedesktop.login1.suspend" && subject.isInGroup("sudo")) {
+              return polkit.Result.YES;
+            }
+          });
+        mode: "0755"
