@@ -47,6 +47,16 @@
       ansible.builtin.command: gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 7200
       changed_when: false
 
+    - name: Register Terminal Profile
+      ansible.builtin.command:
+        cmd: "gsettings get org.gnome.Terminal.ProfilesList default"
+      register: terminal_profile
+      changed_when: false
+
+    - name: Set Terminal Theme Use
+      ansible.builtin.command: "gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:{{ terminal_profile.stdout }}/ use-theme-colors false"
+      changed_when: false
+
     - name: Set Terminal Theme
       ansible.builtin.command: gsettings set org.gnome.Terminal.Legacy.Settings theme-variant 'dark'
       changed_when: false
