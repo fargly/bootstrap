@@ -1,7 +1,6 @@
 ---
 - name: Bootstrap local development environment
-  hosts: 127.0.0.1
-  connection: local
+  hosts: localhost
   vars:
     uvx: "{{ ansible_env.HOME }}/.local/bin/uvx"
     ansible_playbook: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
@@ -69,6 +68,16 @@
       ansible.builtin.git:
         repo: https://github.com/fargly/bootstrap.git
         dest: "{{ ansible_env.HOME }}/.local/opt/bootstrap"
+        accept_hostkey: true
+        update: true
+      # noqa: latest
+
+    - name: Clone Basecamp Omakub Repository
+      ansible.builtin.git:
+        repo: https://github.com/basecamp/omakub.git
+        dest: "{{ ansible_env.HOME }}/.local/share/omakub"
+        accept_hostkey: true
+        update: true
       # noqa: latest
 
     ## Create Local uvx based Ansible Tooling
