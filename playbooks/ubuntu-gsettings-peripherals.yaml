@@ -120,6 +120,10 @@
       ansible.builtin.command: gsettings set org.gnome.desktop.wm.keybindings minimize "['<Alt>a']"
       changed_when: false
 
+    - name: Set Dock to Auto-Hide
+      ansible.builtin.command: gsettings set org.gnome.shell.extensions.dash-to-dock autohide true
+      changed_when: false
+
     - name: Report Settings Gnome
       ansible.builtin.command:
         cmd: "gsettings list-recursively org.gnome.desktop.peripherals"
