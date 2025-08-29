@@ -53,15 +53,22 @@
       register: terminal_profile
       changed_when: false
 
-    - name: Set Terminal Theme Use
+    - name: Set Terminal Theme 1
       ansible.builtin.command: |
-        #gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:{{ terminal_profile.stdout }}/ use-theme-colors false
         gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:XXX/ use-theme-colors true
+      changed_when: false
+
+    - name: Set Terminal Theme 2
+      ansible.builtin.command: |
         gsettings set org.gnome.desktop.interface gtk-theme 'Yaru-dark'
+      changed_when: false
+
+    - name: Set Terminal Theme 3
+      ansible.builtin.command: |
         gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
       changed_when: false
 
-    - name: Set Terminal Theme
+    - name: Set Terminal Theme 4
       ansible.builtin.command: gsettings set org.gnome.Terminal.Legacy.Settings theme-variant 'dark'
       changed_when: false
 
