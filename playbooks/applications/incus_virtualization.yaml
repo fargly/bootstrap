@@ -1,0 +1,40 @@
+---
+- name: Install Incus Virtualization Application
+  hosts: localhost
+  gather_facts: true
+
+  # vars:
+  #   uvx: "{{ ansible_env.HOME }}/.local/bin/uvx"
+  #   ansible_playbook: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
+  #   ansible_galaxy: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
+
+  tasks:
+    - name: Update cache and upgrade packages using generic package manager
+      tags: privileged
+      become: true
+      ansible.builtin.package:
+        upgrade: true
+        update_cache: true
+      when: not ansible_os_family == 'Darwin'
+
+    - name: Install package(s)
+      become: true
+      tags: privileged
+      ansible.builtin.package:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - incus
+          - qemu-system
+      when: not ansible_os_family == 'Darwin'
+
+    # - name: Initialize Incus (if not already initialized)
+    #   ansible.builtin.command: incus init --minimal
+    #   args:
+    #     creates: "{{ ansible_env.HOME }}/.config/incus"
+    #   changed_when: false
+    #   register: incus_init_result
+
+    # incus admin init --minimal
+    # sudo adduser $USER incus-admin
+    # newgrp incus-admin
