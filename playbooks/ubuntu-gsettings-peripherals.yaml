@@ -17,6 +17,13 @@
         state: present
       become: true
 
+    - name: Ensure 'gnome-tweaks' is installed
+      tags: privileged
+      ansible.builtin.package:
+        name: gnome-tweaks
+        state: present
+      become: true
+
     - name: Ensure pip is installed
       tags: privileged
       ansible.builtin.package:
