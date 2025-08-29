@@ -51,13 +51,7 @@
       ansible.builtin.command: gsettings set org.gnome.desktop.interface monospace-font-name "{{ font_name }} 10"
       changed_when: false
 
-    # - name: Copy .otf fonts from the temp directory to the fonts directory
-    #   ansible.builtin.copy:
-    #     src: "{{ item }}"
-    #     dest: "{{ target_dir }}/"
-    #   loop: "{{ lookup('ansible.builtin.fileglob', temp_dir_path.path + '/*.' + file_type ) }}"
-
-    # - name: Remove the directory
-    #   ansible.builtin.file:
-    #     path: "{{ temp_dir_path.path }}"
-    #     state: absent
+    - name: Remove the directory
+      ansible.builtin.file:
+        path: "{{ temp_dir_path.path }}"
+        state: absent
