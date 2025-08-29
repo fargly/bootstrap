@@ -78,10 +78,6 @@
         gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
       changed_when: false
 
-    - name: Set Terminal Theme 6
-      ansible.builtin.command: gsettings set org.gnome.Terminal.Legacy.Settings theme-variant 'Gnome Dark'
-      changed_when: false
-
     - name: Register Terminal Profile
       ansible.builtin.command:
         cmd: "gsettings list-recursively"
