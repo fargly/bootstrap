@@ -119,8 +119,12 @@
       ansible.builtin.command: gsettings set org.gnome.desktop.wm.keybindings minimize "['<Alt>a']"
       changed_when: false
 
-    - name: Set Dock to Auto-Hide
+    - name: Set Dock to Auto-Hide 1
       ansible.builtin.command: gsettings set org.gnome.shell.extensions.dash-to-dock autohide true
+      changed_when: false
+
+    - name: Set Dock to Auto-Hide 2
+      ansible.builtin.command: gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
       changed_when: false
 
     - name: Report Settings Gnome
