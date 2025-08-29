@@ -3,8 +3,9 @@
   hosts: localhost
   gather_facts: true
 
-  # vars:
-  #   uvx: "{{ ansible_env.HOME }}/.local/bin/uvx"
+  vars:
+    incus_user: fargly
+    incus_group: incus-admin
   #   ansible_playbook: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
   #   ansible_galaxy: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
 
@@ -28,6 +29,14 @@
           - qemu-system
       when: not ansible_os_family == 'Darwin'
 
+    - name: Add incus_user to the incus-admin group
+      become: yes
+      tags: privileged
+      ansible.builtin.user:
+        name: {{ incus_user }}
+        groups: {{ incus_group }}
+        append: yes
+        
     # - name: Initialize Incus (if not already initialized)
     #   ansible.builtin.command: incus init --minimal
     #   args:
