@@ -51,8 +51,24 @@
       loop: "{{ font_files.files }}"
       when: font_files.files | length > 0
 
-    - name: Set Terminal Font
+    - name: Set System Font
       ansible.builtin.command: gsettings set org.gnome.desktop.interface monospace-font-name "{{ font_name }} 10"
+      changed_when: false
+
+    - name: Register Terminal Profile
+      ansible.builtin.command:
+        cmd: "gsettings get org.gnome.Terminal.ProfilesList default"
+      register: terminal_profile
+      changed_when: false
+      
+    - name: Set Terminal Profile System Font to false
+      ansible.builtin.command: |
+        gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:{{ terminal_profile.stdout }}/ use-system-font false
+      changed_when: false
+
+    - name: Set Terminal Profile Font to Fira Mono Nerd Font
+      ansible.builtin.command: |
+        gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:{{ terminal_profile.stdout }}/ font '{{ font_name }} 10'
       changed_when: false
 
     - name: Remove the directory
