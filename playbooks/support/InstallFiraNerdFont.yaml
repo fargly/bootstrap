@@ -4,7 +4,7 @@
   gather_facts: true
 
   vars:
-    font_name: "FiraMono"
+    font_name: "FiraMono Nerd Font"
     url: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraMono.zip"
     file_type: "otf"
     file_name: "FiraMono.zip"
@@ -39,6 +39,10 @@
         paths: "{{ temp_dir_path.path }}"
         patterns: "*.{{ file_type }}"
       register: font_files
+
+    - name: Update Font Cache
+      ansible.builtin.command: fc-cache
+      changed_when: false
 
     - name: Copy .otf fonts from the temp directory to the fonts directory
       ansible.builtin.copy:
