@@ -15,18 +15,22 @@
       ansible.builtin.package:
         name: dconf-cli
         state: present
-      become: true  # Required to run commands as root if needed, but 'dconf' is often run as the user.
+      become: true
 
     - name: Ensure pip is installed
+      tags: privileged
       ansible.builtin.package:
         name: python3-pip
         state: present
+      become: true
 
     - name: Install gnome-extensions-cli via pip
+      tags: privileged
       ansible.builtin.pip:
         name: gnome-extensions-cli
         executable: pip3
         state: present
+      become: true
 
     - name: Set touchpad acceleration
       ansible.builtin.command:
