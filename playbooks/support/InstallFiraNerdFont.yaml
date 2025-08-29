@@ -1,0 +1,63 @@
+---
+- name: Install Fira Nerd Font to Support Terminal/Starship
+  hosts: localhost
+  gather_facts: true
+
+  vars:
+    font_name: "FiraMono"
+    url: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraMono.zip"
+    file_type: "otf"
+    file_name: "FiraMono.zip"
+    target_dir: "{{ ansible_env.HOME }}/.local/share/fonts"
+
+  tasks:
+    
+    - name: Create a temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+      register: temp_dir_path
+
+    - name: Display the path of the created temporary directory
+      ansible.builtin.debug:
+        var: temp_dir_path.path
+
+    - name: Download FiraMono Font to the temporary file
+      ansible.builtin.get_url:
+        url: "{{ url }}"
+        dest: "{{ temp_dir_path.path }}"
+        validate_certs: true
+        mode: "0644"
+        force: true
+
+    - name: Unzip Font Archive
+      ansible.builtin.unarchive:
+        src: "{{ temp_dir_path.path }}/{{ file_name }}"
+        dest: "{{ temp_dir_path.path }}"
+
+    - name: Find all files matching the glob pattern
+      ansible.builtin.find:
+        paths: "{{ temp_dir_path.path }}"
+        patterns: "*.{{ file_type }}"
+      register: font_files
+
+    - name: Copy .otf fonts from the temp directory to the fonts directory
+      ansible.builtin.copy:
+        src: "{{ item.path }}"
+        dest: "{{ target_dir }}/"
+      loop: "{{ font_files.files }}"
+      when: font_files.files | length > 0
+
+    - name: Set Terminal Font
+      ansible.builtin.command: gsettings set org.gnome.desktop.interface monospace-font-name "{{ font_name }} 10"
+      changed_when: false
+
+    # - name: Copy .otf fonts from the temp directory to the fonts directory
+    #   ansible.builtin.copy:
+    #     src: "{{ item }}"
+    #     dest: "{{ target_dir }}/"
+    #   loop: "{{ lookup('ansible.builtin.fileglob', temp_dir_path.path + '/*.' + file_type ) }}"
+
+    # - name: Remove the directory
+    #   ansible.builtin.file:
+    #     path: "{{ temp_dir_path.path }}"
+    #     state: absent
