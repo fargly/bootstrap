@@ -24,9 +24,11 @@
         state: present
       become: true
 
-    - name: Install gnome-extensions-cli via pip
+    - name: Ensure pip is installed
       tags: privileged
-      ansible.builtin.command: $HOME/.local/bin/uv pip install --system gnome-extensions-cli
+      ansible.builtin.package:
+        name: python3-pip
+        state: present
       become: true
 
     - name: Set touchpad acceleration
