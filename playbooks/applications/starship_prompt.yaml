@@ -82,15 +82,16 @@
           ##### User Defined Configurations ################
           set -o vi
           alias ltr="eza -l --sort oldest -r"
-          eval "$(uv generate-shell-completion bash)"
-          eval "$(uvx --generate-shell-completion bash)"
+          eval "$({{ ansible_env.HOME }}/.local/bin/uv generate-shell-completion bash)"
+          eval "$({{ ansible_env.HOME }}/.local/bin/uvx --generate-shell-completion bash)"
 
           ##################################################
           ##### Starship Prompt Initialization #############
-          eval "$(starship init bash)"
-          eval "$(starship completions bash)"
+          eval "$({{ ansible_env.HOME }}/.local/bin/starship init bash)"
+          eval "$({{ ansible_env.HOME }}/.local/bin/starship completions bash)"
 
       ansible.builtin.blockinfile:
         path: "{{ ansible_env.HOME }}/.bashrc"
         insertafter: EOF
         block: "{{ config_block }}"
+
