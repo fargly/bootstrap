@@ -17,6 +17,17 @@
         state: present
       become: true  # Required to run commands as root if needed, but 'dconf' is often run as the user.
 
+    - name: Ensure pip is installed
+      ansible.builtin.package:
+        name: python3-pip
+        state: present
+
+    - name: Install gnome-extensions-cli via pip
+      ansible.builtin.pip:
+        name: gnome-extensions-cli
+        executable: pip3
+        state: present
+
     - name: Set touchpad acceleration
       ansible.builtin.command:
         cmd: "gsettings set org.gnome.desktop.peripherals.touchpad speed {{ peripheral_acceleration_value }}"
