@@ -55,7 +55,7 @@
 
     - name: Set Terminal Theme 1
       ansible.builtin.command: |
-        gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:{{ terminal_profile }}/ use-theme-colors true
+        gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:{{ terminal_profile.stdout }}/ use-theme-colors true
       changed_when: false
 
     - name: Set Terminal Theme 2
