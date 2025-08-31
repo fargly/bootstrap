@@ -30,13 +30,13 @@
       when: not ansible_os_family == 'Darwin'
 
     - name: Add incus_user to the incus-admin group
-      become: yes
+      become: true
       tags: privileged
       ansible.builtin.user:
-        name: {{ incus_user }}
-        groups: {{ incus_group }}
-        append: yes
-        
+        name: "{{ incus_user }}"
+        groups: "{{ incus_group }}"
+        append: true
+
     # - name: Initialize Incus (if not already initialized)
     #   ansible.builtin.command: incus init --minimal
     #   args:
