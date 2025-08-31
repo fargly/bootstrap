@@ -1,0 +1,24 @@
+---
+- name: Apt Tasks
+  hosts: localhost
+
+  tasks:
+    - name: Update cache and upgrade packages using generic package manager
+      tags: privileged
+      become: true
+      ansible.builtin.package:
+        upgrade: true
+        update_cache: true
+      when: not ansible_os_family == 'Darwin'
+
+    - name: Install packages
+      tags: privileged
+      become: true
+      ansible.builtin.package:
+        name: "{{ packages }}"
+      vars:
+        ## Add Additional Packages Here
+        packages:
+          - vifm
+      when: not ansible_os_family == 'Darwin'
+
