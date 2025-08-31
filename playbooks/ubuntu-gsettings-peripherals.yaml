@@ -127,6 +127,10 @@
       ansible.builtin.command: gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
       changed_when: false
 
+    - name: Set Dock to Page Position
+      ansible.builtin.command: org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+      changed_when: false
+
     - name: Set Background Image
       ansible.builtin.command: gsettings set org.gnome.desktop.background picture-uri-dark https://raw.githubusercontent.com/basecamp/omakub/master/themes/nord/background.png
       changed_when: false

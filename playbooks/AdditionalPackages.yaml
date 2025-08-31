@@ -20,5 +20,6 @@
         ## Add Additional Packages Here
         packages:
           - vifm
+          - glow
       when: not ansible_os_family == 'Darwin'
 
