@@ -1,0 +1,18 @@
+  vars:
+    uvx: "{{ ansible_env.HOME }}/.local/bin/uvx"
+    ansible_playbook: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
+    ansible_galaxy: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
+
+  tasks:
+
+    - name: Check if the ansible.posix collection is already installed
+      ansible.builtin.command:
+        cmd: "{{ ansible_galaxy }} collection list | grep ansible.posix"
+      register: posix_collection_check
+      failed_when: false # Prevents the play from failing if the collection isn't found
+      changed_when: false # This is a check, not a change
+
+    - name: Ensure the ansible.posix collection is installed
+      ansible.builtin.command: "{{ ansible_galaxy }} collection install ansible.posix"
+      changed_when: false # This is a check, not a change
+      when: posix_collection_check.stdout == ''
