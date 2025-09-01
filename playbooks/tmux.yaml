@@ -7,6 +7,13 @@
   ## This Playbook needs to replicate current powergrendel and m4grendel working installations of OMT!
   ########################################################################################################
 
+## Installation Sequence for ~/.config/tmux
+## $ git clone --single-branch https://github.com/gpakosz/.tmux.git "/path/to/oh-my-tmux"
+## $ mkdir -p ~/.config/tmux
+## $ ln -s /path/to/oh-my-tmux/.tmux.conf ~/.config/tmux/tmux.conf
+## $ cp /path/to/oh-my-tmux/.tmux.conf.local ~/.config/tmux/tmux.conf.local
+
+
   tasks:
     - name: Update apt cache and upgrade packages
       become: true
@@ -27,28 +34,33 @@
     - name: Clone Oh My Tmux!
       ansible.builtin.git:
         repo: https://github.com/gpakosz/.tmux.git
-        dest: "{{ ansible_env.HOME }}/.config/tmux"
+        dest: "{{ ansible_env.HOME }}/.local/opt/tmux"
         update: true
-      # noqa: latest
 
-    - name: Clone TPM Plugin
-      ansible.builtin.git:
-        repo: https://github.com/tmux-plugins/tpm
-        dest: "{{ ansible_env.HOME }}/.config/tmux/plugins/tpm"
-        update: true
-      # noqa: latest
+    - name: Ensure ~/.config/tmux directory
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config/tmux"
+        state: directory
+        mode: "0755"
+
+#    - name: Clone TPM Plugin
+#      ansible.builtin.git:
+#        repo: https://github.com/tmux-plugins/tpm
+#        dest: "{{ ansible_env.HOME }}/.local/opt/tmux/plugins/tpm"
+#        update: true
+#      # noqa: latest
 
     - name: Create symlink for OMT! Tmux Config
       ansible.builtin.file:
-        src: "{{ ansible_env.HOME }}/.config/tmux/.tmux.conf"
-        dest: "{{ ansible_env.HOME }}/.tmux.conf"
+        src: "{{ ansible_env.HOME }}/.local/opt/tmux/.tmux.conf"
+        dest: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf"
         state: link
         follow: false
         force: true
 
     - name: Copy Local OMT! Tmux Config
       ansible.builtin.copy:
-        src: "{{ ansible_env.HOME }}/.config/tmux/.tmux.conf.local"
-        dest: "{{ ansible_env.HOME }}/.tmux.conf.local"
+        src: "{{ ansible_env.HOME }}/.local/opt/tmux/.tmux.conf.local"
+        dest: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf.local"
         mode: '0600'
 
