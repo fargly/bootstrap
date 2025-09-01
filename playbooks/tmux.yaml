@@ -1,16 +1,10 @@
 ---
+- name: Import Ansible Posix Playbook
+  ansible.builtin.import_playbook: ansible-posix.yaml
+
 - name: Tmux and Utilities Setup
   hosts: localhost
   gather_facts: true
-
-#  vars:
-#    uvx: "{{ ansible_env.HOME }}/.local/bin/uvx"
-#    ansible_playbook: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
-#    ansible_galaxy: "{{ ansible_env.HOME }}/.local/bin/uvx --from ansible-core ansible-galaxy"
-
-  ########################################################################################################
-  ## This Playbook needs to replicate current powergrendel and m4grendel working installations of OMT!
-  ########################################################################################################
 
   tasks:
     - name: Update apt cache and upgrade packages
@@ -55,15 +49,8 @@
         dest: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf.local"
         mode: '0600'
 
-    - name: Include Ansible Galaxy Task
-      ansible.builtin.include_tasks: ansible-posix.yaml
-
     - name: Apply patch to one file
-      ansible.builtin.debug:
-        msg: posix_collection_check
-
-#    - name: Apply patch to one file
-#      ansible.posix.patch:
-#        src: tmux-conf-local.patch
-#        dest: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf.local"
+      ansible.posix.patch:
+        src: tmux-conf-local.patch
+        dest: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf.local"
 
