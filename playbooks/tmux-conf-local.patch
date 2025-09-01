@@ -1,0 +1,68 @@
+236,243c236,243
+< tmux_conf_theme_left_separator_main=""
+< tmux_conf_theme_left_separator_sub="|"
+< tmux_conf_theme_right_separator_main=""
+< tmux_conf_theme_right_separator_sub="|"
+< #tmux_conf_theme_left_separator_main='\uE0B0'  # /!\ you don't need to install Powerline
+< #tmux_conf_theme_left_separator_sub='\uE0B1'   #   you only need fonts patched with
+< #tmux_conf_theme_right_separator_main='\uE0B2' #   Powerline symbols or the standalone
+< #tmux_conf_theme_right_separator_sub='\uE0B3'  #   PowerlineSymbols.otf font, see README.md
+---
+> #tmux_conf_theme_left_separator_main=""
+> #tmux_conf_theme_left_separator_sub="|"
+> #tmux_conf_theme_right_separator_main=""
+> #tmux_conf_theme_right_separator_sub="|"
+> tmux_conf_theme_left_separator_main='\uE0B0'  # /!\ you don't need to install Powerline
+> tmux_conf_theme_left_separator_sub='\uE0B1'   #   you only need fonts patched with
+> tmux_conf_theme_right_separator_main='\uE0B2' #   Powerline symbols or the standalone
+> tmux_conf_theme_right_separator_sub='\uE0B3'  #   PowerlineSymbols.otf font, see README.md
+394,395c394,395
+< #set -g status-keys vi
+< #set -g mode-keys vi
+---
+> set -g status-keys vi
+> set -g mode-keys vi
+398,402c398,402
+< # set -gu prefix2
+< # unbind C-a
+< # unbind C-b
+< # set -g prefix C-a
+< # bind C-a send-prefix
+---
+> set -gu prefix2
+> unbind C-a
+> unbind C-b
+> set -g prefix C-a
+> bind C-a send-prefix
+449,451c449,458
+< #set -g @plugin 'tmux-plugins/tmux-copycat'
+< #set -g @plugin 'tmux-plugins/tmux-cpu'
+< #set -g @plugin 'tmux-plugins/tmux-resurrect'
+---
+> set -g @plugin 'tmux-plugins/tmux-copycat'
+> set -g @plugin 'tmux-plugins/tmux-cpu'
+> set -g @plugin 'tmux-plugins/tmux-resurrect'
+> set -g @plugin 'sainnhe/tmux-fzf'
+> set -g @plugin "arcticicestudio/nord-tmux"
+> #set -g @plugin 'fabioluciano/tmux-tokyo-night'
+> #set -g @plugin 'catppuccin/tmux' # See https://github.com/catppuccin/tmux/tags for additional tags
+> #set -g @catppuccin_flavor 'mocha' # latte, frappe, macchiato or mocha
+> #set -g @plugin 'o0th/tmux-nova'
+> 
+508a516,531
+> ## -- BYOBU Analogues (Ported from byobu Utility)------------------------------
+> unbind n
+> bind n next-window
+> unbind " "
+> bind " " next-window
+> unbind p
+> bind p previous-window
+> unbind BSpace
+> bind BSpace previous-window
+> unbind w
+> bind w list-windows
+> unbind '"'
+> bind '"' choose-window
+> unbind |
+> bind | split-window -c "#{pane_current_path}"
+> 
