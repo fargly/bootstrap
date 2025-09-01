@@ -3,6 +3,10 @@
   hosts: localhost
   gather_facts: true
 
+  ########################################################################################################
+  ## This Playbook needs to replicate current powergrendel and m4grendel working installations of OMT!
+  ########################################################################################################
+
   tasks:
     - name: Update apt cache and upgrade packages
       become: true
@@ -17,100 +21,34 @@
         name: "{{ packages }}"
       vars:
         packages:
-          - bash-completion
-          - binutils
-          - dnsutils
-          - htop
           - tmux
-          - unzip
       tags: privileged
-
-    ## Ensure .local/bin Directory Exists
-    - name: Ensure ~/.local/bin directory
-      ansible.builtin.file:
-        path: "{{ ansible_env.HOME }}/.local/bin"
-        state: directory
-        mode: "0755"
-
-    ## Ensure .local/opt Directory Exists
-    - name: Ensure ~/.local/opt directory
-      ansible.builtin.file:
-        path: "{{ ansible_env.HOME }}/.local/opt"
-        state: directory
-        mode: "0755"
 
     - name: Clone Oh My Tmux!
       ansible.builtin.git:
         repo: https://github.com/gpakosz/.tmux.git
-        dest: "{{ ansible_env.HOME }}/.local/opt/tmux"
+        dest: "{{ ansible_env.HOME }}/.config/tmux"
+        update: true
       # noqa: latest
 
     - name: Clone TPM Plugin
       ansible.builtin.git:
         repo: https://github.com/tmux-plugins/tpm
-        dest: "{{ ansible_env.HOME }}/.local/opt/tmux/plugins/tpm"
+        dest: "{{ ansible_env.HOME }}/.config/tmux/plugins/tpm"
+        update: true
       # noqa: latest
 
-    - name: Clone Fargly's Bootstrap Repository
-      ansible.builtin.git:
-        repo: https://github.com/fargly/bootstrap.git
-        dest: "{{ ansible_env.HOME }}/.local/opt/bootstrap"
-      # noqa: latest
+    - name: Create symlink for OMT! Tmux Config
+      ansible.builtin.file:
+        src: "{{ ansible_env.HOME }}/.config/tmux/.tmux.conf"
+        dest: "{{ ansible_env.HOME }}/.tmux.conf"
+        state: link
+        follow: false
+        force: true
 
-    ## Create Local uvx based Ansible Tooling
-    - name: Create ansible-playbook script
+    - name: Copy Local OMT! Tmux Config
       ansible.builtin.copy:
-        dest: "{{ ansible_env.HOME }}/.local/bin/ansible-playbook"
-        content: |
-          #!/usr/bin/env bash
-          ## uvx based Ansible Playbook Launcher v0.1 20250724
+        src: "{{ ansible_env.HOME }}/.config/tmux/.tmux.conf.local"
+        dest: "{{ ansible_env.HOME }}/.tmux.conf.local"
+        mode: '0600'
 
-          #uvx --from ansible-core ansible-playbook --ask-become-pass
-          uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
-
-          ## EOF
-        mode: "0755"
-
-    - name: Create ansible-playbook-privilege script
-      ansible.builtin.copy:
-        dest: "{{ ansible_env.HOME }}/.local/bin/ansible-playbook-privilege"
-        content: |
-          #!/usr/bin/env bash
-          ## uvx based Ansible Playbook Launcher v0.1 20250724
-
-          #uvx --from ansible-core ansible-playbook
-          uvx --from ansible-core ansible-playbook --ask-become-pass $@
-
-          ## EOF
-        mode: "0755"
-
-    - name: Create ansible-vault script
-      ansible.builtin.copy:
-        dest: "{{ ansible_env.HOME }}/.local/bin/ansible-vault"
-        content: |
-          #!/usr/bin/env bash
-          ## uvx based Ansible Vault Launcher v0.1 20250724
-
-          #uvx --from ansible-core ansible-playbook --ask-become-pass
-          #uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
-          ## Note: You may need to add '--ask-vault-pass' in bootstrapping mode
-          uvx --from ansible-core ansible-vault $@
-
-          ## EOF
-        mode: "0755"
-
-    - name: Remove the env file line
-      ansible.builtin.lineinfile:
-        path: "{{ ansible_env.HOME }}/.bashrc"
-        regexp: '^.*/.local/bin/env.*$'
-        state: absent
-
-    - name: Add basic bashrc items
-      ansible.builtin.lineinfile:
-        path: "{{ ansible_env.HOME }}/.bashrc"
-        line: |
-
-          set -o vi
-          export EDITOR=vim
-
-        state: present
