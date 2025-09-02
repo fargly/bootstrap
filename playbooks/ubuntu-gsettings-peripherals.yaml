@@ -107,6 +107,10 @@
       when: is_tactile_enabled
       changed_when: false
 
+    - name: Set Overamplification On
+      ansible.builtin.command: gsettings set org.gnome.desktop.sound allow-volume-above-100-percent true
+      changed_when: false
+
     - name: Set Terminal Hotkey
       ansible.builtin.command: gsettings set org.gnome.settings-daemon.plugins.media-keys terminal "['<Alt>t']"
       changed_when: false
