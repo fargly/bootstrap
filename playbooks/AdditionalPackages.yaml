@@ -23,5 +23,8 @@
           - glow
           - build-essential
           - libudev-dev
+          - gnome-shell-extension-manager
+          - gnome-tweaks
+          - python3-pip
       when: not ansible_os_family == 'Darwin'
 
