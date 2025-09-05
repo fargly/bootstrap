@@ -24,6 +24,23 @@
         state: present
       become: true
 
+    - name: Ensure 'gnome-shell-extension-manager' is installed
+      tags: privileged
+      ansible.builtin.package:
+        name: gnome-shell-extension-manager
+        state: present
+      become: true
+
+    - name: Install hidetopbar extension
+      ansible.builtin.command:
+        cmd: "uvx gnome-extensions-cli install hidetopbar@mathieu.bidon.ca"
+      changed_when: false
+
+    - name: Install dash-to-dock extension
+      ansible.builtin.command:
+        cmd: "uvx gnome-extensions-cli dash-to-dock"
+      changed_when: false
+
     - name: Ensure pip is installed
       tags: privileged
       ansible.builtin.package:
@@ -152,8 +169,3 @@
       loop_control:
         label: "{{ item }}"
 
-    - name: Install hidetopbar extension
-      ansible.builtin.command:
-        cmd: "uvx gnome-extensions-cli install hidetopbar@mathieu.bidon.ca"
-      register: peripheral_settings
-      changed_when: false
