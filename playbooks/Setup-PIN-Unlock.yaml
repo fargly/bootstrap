@@ -1,7 +1,6 @@
 ---
 - name: Setup PIN Unlock
   hosts: localhost
-  connection: local
   gather_facts: true
 
   vars_files:
