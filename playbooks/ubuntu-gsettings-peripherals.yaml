@@ -38,7 +38,7 @@
 
     - name: Install dash-to-dock extension
       ansible.builtin.command:
-        cmd: "uvx gnome-extensions-cli dash-to-dock"
+        cmd: "uvx gnome-extensions-cli install dash-to-dock"
       changed_when: false
 
     - name: Ensure pip is installed
