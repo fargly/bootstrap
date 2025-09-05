@@ -32,7 +32,7 @@
 
     - name: Execute the script
       when: not binary_stat.stat.exists or not binary_stat.stat.executable
-      ansible.builtin.command: "{{ tailscale_install_script_tempfile }}"
+      ansible.builtin.command: "bash {{ tailscale_install_script_tempfile }}"
       become: true
       changed_when: true
 
