@@ -149,7 +149,11 @@
       changed_when: false
 
     - name: Set Dock to Page Position
-      ansible.builtin.command: org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+      ansible.builtin.command: gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+      changed_when: false
+
+    - name: Set Dock Icons to Center
+      ansible.builtin.command: gsettings set org.gnome.shell.extensions.dash-to-dock always-center-icons true
       changed_when: false
 
     - name: Set Background Image
