@@ -58,11 +58,11 @@
         backend_active: "{{ (tailscale_output.stdout | from_json).BackendState == 'Running' }}"
         is_online: "{{ (tailscale_output.stdout | from_json).Self.Online }}"
 
-    - name: Print the new variables to confirm
-      ansible.builtin.debug:
-        msg:
-          - "Backend active status: {{ backend_active }}"
-          - "Is online status: {{ is_online }}"
+    # - name: Print the new variables to confirm
+    #   ansible.builtin.debug:
+    #     msg:
+    #       - "Backend active status: {{ backend_active }}"
+    #       - "Is online status: {{ is_online }}"
 
     - name: Ensure Node Tailscale is joined and configured when not online and backend_active is true
       when: not is_online and not backend_active
