@@ -67,5 +67,7 @@
     - name: Ensure Node Tailscale is joined and configured when not online and backend_active is true
       when: not is_online and not backend_active
       become: true
-      ansible.builtin.command: "sudo {{ tailscale_binary_path }}/tailscale up --auth-key={{ tailscale_auth_key }} --hostname={{ ansible_hostname }}"
+      # ansible.builtin.command: "sudo {{ tailscale_binary_path }}/tailscale up --auth-key={{ tailscale_auth_key }} --hostname={{ ansible_hostname }}"
+      ansible.builtin.debug:
+        msg: "Would use {{ tailscale_auth_key }} to join Tailscale network on host {{ ansible_hostname }}"
       changed_when: true
