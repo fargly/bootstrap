@@ -86,7 +86,16 @@
         dest: "{{ ansible_env.HOME }}/.local/bin/ansible-playbook"
         content: |
           #!/usr/bin/env bash
-          ## uvx based Ansible Playbook Launcher v0.1 20250724
+          uvx --from ansible-core ansible-playbook $@
+
+          ## EOF
+        mode: "0755"
+
+    - name: Create ansible-playbook-noprivilege script
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.local/bin/ansible-playbook-noprivilege"
+        content: |
+          #!/usr/bin/env bash
           uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
 
           ## EOF
@@ -97,7 +106,6 @@
         dest: "{{ ansible_env.HOME }}/.local/bin/ansible-playbook-privilege"
         content: |
           #!/usr/bin/env bash
-          ## uvx based Ansible Playbook Launcher v0.1 20250724
           uvx --from ansible-core ansible-playbook --ask-become-pass $@
 
           ## EOF
@@ -108,7 +116,6 @@
         dest: "{{ ansible_env.HOME }}/.local/bin/ansible-vault"
         content: |
           #!/usr/bin/env bash
-          ## uvx based Ansible Vault Launcher v0.1 20250724
           ## Note: You may need to add '--ask-vault-pass' in bootstrapping mode
           uvx --from ansible-core ansible-vault $@
 
@@ -120,7 +127,6 @@
         dest: "{{ ansible_env.HOME }}/.local/bin/ansible-galaxy"
         content: |
           #!/usr/bin/env bash
-          ## uvx based Ansible Galaxy Launcher v0.1 20250724
           uvx --from ansible-core ansible-galaxy $@
 
           ## EOF
