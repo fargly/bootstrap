@@ -85,6 +85,7 @@
           alias ltr="eza -l --sort oldest -r"
           eval "$({{ ansible_env.HOME }}/.local/bin/uv generate-shell-completion bash)"
           eval "$({{ ansible_env.HOME }}/.local/bin/uvx --generate-shell-completion bash)"
+          eval "$(/usr/bin/tailscale completion bash)"
 
           ##################################################
           ##### Starship Prompt Initialization #############
@@ -95,4 +96,3 @@
         path: "{{ ansible_env.HOME }}/.bashrc"
         insertafter: EOF
         block: "{{ config_block }}"
-
