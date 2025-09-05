@@ -2,8 +2,11 @@
 
 - name: Manage Tailscale installation and configuration
   hosts: localhost
-  # become: true
-  #
+  gather_facts: true
+
+  vars_files:
+    - secrets.yaml.vault # This line tells Ansible to load variables from vault.yml
+
   vars:
     # tailscale_version: "1.44.3"
     tailscale_binary_path: "/usr/bin"
@@ -40,6 +43,35 @@
       ansible.builtin.file:
         path: "{{ tailscale_install_script_tempfile }}"
         state: absent
+
+    - name: Execute the script
+      ansible.builtin.command: "{{ tailscale_binary_path }}/tailscale status --self=true --peers=false --json=true"
+      register: tailscale_output
+      changed_when: false   ## Information Gathering
+
+    # - name: Display tailscale status for debugging
+    #   ansible.builtin.debug:
+    #     var: tailscale_status.stdout
+
+    - name: Parse JSON and set boolean variables
+      ansible.builtin.set_fact:
+        backend_active: "{{ (tailscale_output.stdout | from_json).BackendState == 'Running' }}"
+        is_online: "{{ (tailscale_output.stdout | from_json).Self.Online }}"
+
+    - name: Print the new variables to confirm
+      ansible.builtin.debug:
+        msg:
+          - "Backend active status: {{ backend_active }}"
+          - "Is online status: {{ is_online }}"
+
+    - name: Ensure Node Tailscale is joined and configured when not online and backend_active is true
+      when: not is_online and not backend_active
+      ansible.builtin.debug:
+        msg: "This task would run and join the tailnet"
+
+      # ansible.builtin.command: >
+      #   {{ tailscale_binary_path }}/tailscale up
+      #   --authkey {{ tailscale }}
 
 # tailscale status --self=true --peers=false --json=true | jq .Self.Online
 # true
