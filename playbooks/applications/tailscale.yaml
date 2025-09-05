@@ -1,0 +1,49 @@
+---
+
+- name: Manage Tailscale installation and configuration
+  hosts: localhost
+  # become: true
+  #
+  vars:
+    # tailscale_version: "1.44.3"
+    tailscale_binary_path: "/usr/bin"
+    # tailscale_config_path: "/etc/tailscale/tailscaled.conf"
+    tailscale_install_script_url: "https://tailscale.com/install.sh"
+    tailscale_install_script_tempfile: "/tmp/tailscale_install.sh"
+    # tailscale_service_name: "tailscaled"
+
+  tasks:
+
+    - name: Check if the tailscale binary exists and is executable
+      ansible.builtin.stat:
+        path: "{{ tailscale_binary_path }}/tailscale"
+      register: binary_stat
+
+    # - name: Display binary stat for debugging
+    #   ansible.builtin.debug:
+    #     var: binary_stat
+
+    - name: Download the script if it doesn't exist or isn't executable
+      when: not binary_stat.stat.exists or not binary_stat.stat.executable
+      ansible.builtin.get_url:
+        url: "{{ tailscale_install_script_url }}"
+        dest: "{{ tailscale_install_script_tempfile }}"
+        mode: '0755'
+
+    - name: Execute the script
+      when: not binary_stat.stat.exists or not binary_stat.stat.executable
+      ansible.builtin.command: "{{ tailscale_install_script_tempfile }}"
+      become: true
+      changed_when: true
+
+    - name: Remove temporary script if present
+      ansible.builtin.file:
+        path: "{{ tailscale_install_script_tempfile }}"
+        state: absent
+
+# tailscale status --self=true --peers=false --json=true | jq .Self.Online
+# true
+
+# ░▒▓ fargly@ryz7grendel  …/bootstrap/playbooks   main !?   10:52 
+# ❯ tailscale status --self=true --peers=false --json=true | jq .BackendState
+# "Running"
