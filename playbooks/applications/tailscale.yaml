@@ -67,7 +67,8 @@
     - name: Ensure Node Tailscale is joined and configured when not online and backend_active is true
       when: not is_online and not backend_active
       ansible.builtin.debug:
-        msg: "This task would run and join the tailnet"
+        msg: "This task would run and join the tailnet for {{ ansible_hostname }}"
+        # sudo tailscale up --auth-key=tskey-auth-XXXXXXXXX --hostname=my-preapproved-server
 
       # ansible.builtin.command: >
       #   {{ tailscale_binary_path }}/tailscale up
