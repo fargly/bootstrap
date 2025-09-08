@@ -19,11 +19,11 @@
       ansible.builtin.user:
         name: "{{ item.username }}"
         uid: "{{ item.uid }}"
-        # gid: "{{ item.gid }}"
+        group: "{{ item.username }}"
         password: "{{ item.password }}"
         state: present
         shell: /bin/bash
-        # groups: adm sudo
+        groups: adm
         append: true
         # comment: "{{ item.metadata_1 }}"
       loop: "{{ users_data }}"
