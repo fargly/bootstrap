@@ -1,19 +1,11 @@
 ---
+
 - name: Manage Ubuntu Users
   hosts: all
   become: true
-  vars:
-    users_data:
-      - username: john
-        uid: 1001
-        gid: 1001
-        password: "{{ 'supersecretpassword1' | password_hash('sha512', 'my-salt') }}"
-        metadata_1: "Department: IT"
-      - username: jane
-        uid: 1002
-        gid: 1002
-        password: "{{ 'anothersafepassword2' | password_hash('sha512', 'my-salt') }}"
-        metadata_1: "Department: Marketing"
+
+  vars_files:
+    - secrets.yaml.vault
 
   tasks:
     - name: Ensure user directories and groups exist
@@ -27,9 +19,11 @@
       ansible.builtin.user:
         name: "{{ item.username }}"
         uid: "{{ item.uid }}"
-        : "{{ item.gid }}"
+        gid: "{{ item.gid }}"
         password: "{{ item.password }}"
         state: present
         shell: /bin/bash
-        comment: "{{ item.metadata_1 }}"
+        groups: adm sudo
+        append: true
+        # comment: "{{ item.metadata_1 }}"
       loop: "{{ users_data }}"
