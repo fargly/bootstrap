@@ -19,7 +19,7 @@
       ansible.builtin.user:
         name: "{{ item.username }}"
         uid: "{{ item.uid }}"
-        gid: "{{ item.gid }}"
+        # gid: "{{ item.gid }}"
         password: "{{ item.password }}"
         state: present
         shell: /bin/bash
