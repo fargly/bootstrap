@@ -53,4 +53,3 @@
       ansible.posix.patch:
         src: tmux-conf-local.patch
         dest: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf.local"
-
