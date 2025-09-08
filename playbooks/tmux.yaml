@@ -28,6 +28,7 @@
         repo: https://github.com/gpakosz/.tmux.git
         dest: "{{ ansible_env.HOME }}/.local/opt/tmux"
         update: true
+      # noqa: latest
 
     - name: Ensure ~/.config/tmux directory
       ansible.builtin.file:
