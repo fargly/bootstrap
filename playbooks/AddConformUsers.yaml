@@ -27,7 +27,7 @@
         password: "{{ item.password }}"
         state: present
         shell: /bin/bash
-        groups: adm sudo
+        groups: adm,sudo
         append: true
         # comment: "{{ item.metadata_1 }}"
       loop: "{{ users_data }}"
