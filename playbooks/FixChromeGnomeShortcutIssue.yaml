@@ -1,0 +1,20 @@
+---
+
+- name: Fix Chrome GNOME Shortcut Issue
+  hosts: localhost
+  gather_facts: true
+
+  tasks:
+    - name: Copy desktop entry to applications directory
+      ansible.builtin.copy:
+        src: /usr/share/applications/google-chrome.desktop
+        dest: ~/.local/share/applications/
+        mode: '0644'
+
+    - name: Modify google-chrome.desktop
+      ansible.builtin.replace:
+        path: "~/.local/share/applications/google-chrome.desktop"
+        regexp: 'Exec=/usr/bin/google-chrome-stable %U'
+        replace: 'Exec=/usr/bin/google-chrome-stable --disable-features=GlobalShortcutsPortal %U'
+        backup: false
+      changed_when: true
