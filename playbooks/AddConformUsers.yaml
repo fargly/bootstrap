@@ -8,6 +8,10 @@
     - secrets.yaml.vault
 
   tasks:
+    - name: End the play on hosts that are not Linux
+      ansible.builtin.meta: end_play
+      when: not ansible_facts['system'] == "Linux"
+
     - name: Ensure user directories and groups exist
       ansible.builtin.group:
         name: "{{ item.username }}"
@@ -23,7 +27,7 @@
         password: "{{ item.password }}"
         state: present
         shell: /bin/bash
-        groups: adm
+        groups: adm sudo
         append: true
         # comment: "{{ item.metadata_1 }}"
       loop: "{{ users_data }}"
