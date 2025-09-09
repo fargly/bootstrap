@@ -31,3 +31,13 @@
         append: true
         # comment: "{{ item.metadata_1 }}"
       loop: "{{ users_data }}"
+
+    - name: Conform PIN Password for GDM
+      ansible.builtin.lineinfile:
+        path: "/etc/custompinfile"
+        mode: '0600'
+        line: "{{ item.pin_password }}"
+        create: true
+        state: present
+      loop: "{{ users_data }}"
+      no_log: true
