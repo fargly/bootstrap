@@ -61,6 +61,13 @@
     #   ansible.builtin.debug:
     #     msg: "FORCE_UPDATE is set to: {{ force_update }}"
 
+    - name: Clone Nvim Kickstart Repo
+      ansible.builtin.git:
+        repo: https://github.com/nvim-lua/kickstart.nvim.git
+        dest: "{{ ansible_env.HOME }}/.config/nvim"
+        update: true
+      # noqa: latest
+
     - name: Skip if nvim binary exists
       ansible.builtin.meta: end_play
       when: nvim_binary.stat.exists and not force_update
@@ -91,10 +98,3 @@
       ansible.builtin.file:
         path: "{{ nvim_tempfile.path }}"
         state: absent
-
-    - name: Clone Nvim Kickstart Repo
-      ansible.builtin.git:
-        repo: https://github.com/nvim-lua/kickstart.nvim.git
-        dest: "{{ ansible_env.HOME }}/.config/nvim"
-        update: true
-      # noqa: latest
