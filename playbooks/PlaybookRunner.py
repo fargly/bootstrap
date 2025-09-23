@@ -67,10 +67,6 @@ def run_playbooks():
 
 
 if __name__ == "__main__":
-    import time
-
-    time.sleep(10)
-
     if len(sys.argv) != 3:
         print(f"Usage: {sys.argv[0]} <EscalationPassword> <VaultPassword>")
         pass
