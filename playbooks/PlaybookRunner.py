@@ -1,3 +1,5 @@
+#!/usr/bin/env -S uv run --script
+
 import subprocess
 import sys
 import os
@@ -66,7 +68,8 @@ def run_playbooks():
 
 
 if __name__ == "__main__":
-    # run_playbooks()
-    print("hello world")
-    pass
-    run_playbooks()
+    if len(sys.argv) != 3:
+        print(f"Usage: {sys.argv[0]} <EscalationPassword> <VaultPassword>")
+        pass
+    else:
+        run_playbooks()
