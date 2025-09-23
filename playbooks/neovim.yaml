@@ -77,7 +77,8 @@
 
       ansible.builtin.lineinfile:
         path: "{{ target_file }}"
-        regexp: "^{{ option_line | regex_escape }}$" # Regex to match the exact option line
+        # regexp: "^{{ option_line | regex_escape }}$" # Regex to match the exact option line
+        regexp: "^{{ option_line }}$" # Regex to match the exact option line
         line: "{{ desired_line }}"
         state: present
         backup: true
