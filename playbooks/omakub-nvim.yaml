@@ -22,15 +22,3 @@
         state: present
         backup: true
       when: file_stat.stat.exists and file_stat.stat.isreg # Only run if file exists and is a regular file
-
-#   notify: Restart Service # Optional: Add a handler to restart a service if changes are made
-##       nvim --headless -c "echo stdpath('config')"
-## cat options.lua
-## -- Options are automatically loaded before lazy.nvim startup
-## -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
-## -- Add any additional options here
-## vim.opt.relativenumber = false
-##  pwd
-## /home/fargly/.config/nvim/lua/config
-
-            # {{ ansible_env.HOME }}/.vault_pass.txt"

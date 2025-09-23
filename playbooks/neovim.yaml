@@ -65,7 +65,7 @@
       ansible.builtin.git:
         repo: https://github.com/nvim-lua/kickstart.nvim.git
         dest: "{{ ansible_env.HOME }}/.config/nvim"
-        update: true
+        update: false
       # noqa: latest
 
     - name: Ensure ~/.local/bin directory
