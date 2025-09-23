@@ -30,6 +30,7 @@ playbooks_list: List[str] = [
     "neovim.yaml",
     "AdditionalPackages.yaml",
     "AddConformUsers.yaml",
+    "SuspendViaSSH.yaml",
 ]
 
 playbooks: List[str] = [f"{playbookdirectory}/{pb}" for pb in playbooks_list]
