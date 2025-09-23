@@ -68,25 +68,19 @@
         update: true
       # noqa: latest
 
+    - name: Ensure ~/.local/bin directory
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/Projects/Fargly/fNv5"
+        state: directory
+        mode: "0755"
+
     - name: Configure Nvim Kickstart for Custom Plugins
-
-      # vars:
-      #   target_file: "{{ ansible_env.HOME }}/.config/nvim/init.lua"  # The file to modify
-      #   option_line: "-- { import = 'custom.plugins' },"
-      #   desired_line: "{ import = 'custom.plugins' },"
-
       ansible.builtin.lineinfile:
         path: "{{ ansible_env.HOME }}/.config/nvim/init.lua"
         regexp: '^ *-- { import = ''custom.plugins'' },$'
         line: "{ import = 'custom.plugins' },"
         backup: true
         state: present
-        # path: "{{ target_file }}"
-        # # regexp: "^{{ option_line | regex_escape }}$" # Regex to match the exact option line
-        # regexp: "^{{ option_line }}$" # Regex to match the exact option line
-        # line: "{{ desired_line }}"
-        # state: present
-        # backup: true
 
     - name: Configure Nvim Kickstart for Custom Plugins Extras
       ansible.builtin.copy:
