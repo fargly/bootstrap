@@ -3,28 +3,23 @@
 import subprocess
 import sys
 import os
+from typing import List
 
 playbookdirectory: str = os.path.dirname(os.path.abspath(__file__))
 
 # Define the list of playbooks to run
 # Ensure these playbooks are in the same directory as the script, or provide their full path
-playbooks = [
-    # "/home/fargly/Projects/bootstrap/playbooks/HelloWorld.yaml",
-    f"{playbookdirectory}/HelloWorld.yaml",
+playbooks_list: List[str] = [
+    "HelloWorld.yaml",
 ]
+
+playbooks: List[str] = [f"{playbookdirectory}/{pb}" for pb in playbooks_list]
 
 # Define common options for the ansible-playbook command
 # -i specifies the inventory file
 # inventory = "inventory.ini"
 # common_options = ["-i", inventory]
 common_options = []
-
-"""
-#!/usr/bin/env bash
-uvx --from ansible-core ansible-playbook $@
-
-## EOF
-# """
 
 
 def run_playbooks():
@@ -44,6 +39,10 @@ def run_playbooks():
             "--from",
             "ansible-core",
             "ansible-playbook",
+            "--become-password-file",
+            sys.argv[1],
+            "--vault-password-file",
+            sys.argv[2],
             playbook,
         ] + common_options
 
@@ -68,8 +67,14 @@ def run_playbooks():
 
 
 if __name__ == "__main__":
+    import time
+
+    time.sleep(10)
+
     if len(sys.argv) != 3:
         print(f"Usage: {sys.argv[0]} <EscalationPassword> <VaultPassword>")
         pass
     else:
         run_playbooks()
+
+## EOF
