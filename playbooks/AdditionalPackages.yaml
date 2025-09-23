@@ -26,5 +26,5 @@
           - gnome-shell-extension-manager
           - gnome-tweaks
           - python3-pip
+          - eza
       when: not ansible_os_family == 'Darwin'
-

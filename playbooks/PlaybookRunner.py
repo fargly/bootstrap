@@ -7,10 +7,10 @@ from typing import List
 
 playbookdirectory: str = os.path.dirname(os.path.abspath(__file__))
 """
-AddConformUsers.yaml      ansible-posix.yaml              data.yaml                     FixChromeGnomeShortcutIssue.yaml  Linux_Chell_Audio_Fix.yaml  PlaybookRunner.py           Setup-PIN-Unlock.yaml  tailscale.yaml         ubuntu-gsettings-peripherals.yaml        WOL.yaml
-AdditionalPackages.yaml   bootstrap.yaml                  DeCredentialTailscale.yaml    HelloWorld.yaml                   macos.yaml                  ReCredentialTailscale.yaml  starship_prompt.yaml   tmux-conf-local.patch  ubuntu-turn-off-automatic-upgrades.yaml
-ansible_facts_print.yaml  chromebook-keyboard-Linux.yaml  DELETEME-escalation-password  incus_virtualization.yaml         neovim.yaml                 secret-management.yaml      SuperKeyRemap.yaml     TmuxMetaPlaybook.sh    webi-installs.yaml
-ansible_pass.yaml         crostini_username.yaml          DELETEME-vault-password       InstallFiraNerdFont.yaml          omakub-nvim.yaml            secrets.yaml.vault          SuspendViaSSH.yaml     tmux.yaml              webi.yaml
+ansible-posix.yaml              data.yaml                     FixChromeGnomeShortcutIssue.yaml                              PlaybookRunner.py                                  tailscale.yaml                                                  WOL.yaml
+bootstrap.yaml                  DeCredentialTailscale.yaml    HelloWorld.yaml                   macos.yaml                  ReCredentialTailscale.yaml                         tmux-conf-local.patch  ubuntu-turn-off-automatic-upgrades.yaml
+chromebook-keyboard-Linux.yaml  DELETEME-escalation-password  incus_virtualization.yaml                                                                 SuperKeyRemap.yaml     TmuxMetaPlaybook.sh    
+crostini_username.yaml          DELETEME-vault-password                                         omakub-nvim.yaml            secrets.yaml.vault          SuspendViaSSH.yaml                           
 """
 
 # Define the list of playbooks to run
@@ -18,6 +18,18 @@ ansible_pass.yaml         crostini_username.yaml          DELETEME-vault-passwor
 playbooks_list: List[str] = [
     "ansible_pass.yaml",
     "secret-management.yaml",
+    "ansible-posix.yaml",
+    "InstallFiraNerdFont.yaml",
+    "tmux.yaml",
+    "webi.yaml",
+    "webi-installs.yaml",
+    "Linux_Chell_Audio_Fix.yaml",
+    "Setup-PIN-Unlock.yaml",
+    "starship_prompt.yaml",
+    "ubuntu-gsettings-peripherals.yaml",
+    "neovim.yaml",
+    "AdditionalPackages.yaml",
+    "AddConformUsers.yaml",
 ]
 
 playbooks: List[str] = [f"{playbookdirectory}/{pb}" for pb in playbooks_list]
