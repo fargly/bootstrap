@@ -77,7 +77,7 @@
 
       ansible.builtin.lineinfile:
         path: "{{ ansible_env.HOME }}/.config/nvim/init.lua"
-        regexp: '^-- { import = ''custom.plugins'' },$'
+        regexp: '^ *-- { import = ''custom.plugins'' },$'
         line: "{ import = 'custom.plugins' },"
         backup: true
         state: present
