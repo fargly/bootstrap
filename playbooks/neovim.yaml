@@ -68,7 +68,21 @@
         update: true
       # noqa: latest
 
-    - name: Configure Nvim Kickstart
+    - name: Configure Nvim Kickstart for Custom Plugins
+
+      vars:
+        target_file: "{{ ansible_env.HOME }}/.config/nvim/init.lua"  # The file to modify
+        option_line: "-- { import = 'custom.plugins' },"
+        desired_line: "{ import = 'custom.plugins' },"
+
+      ansible.builtin.lineinfile:
+        path: "{{ target_file }}"
+        regexp: "^{{ option_line | regex_escape }}$" # Regex to match the exact option line
+        line: "{{ desired_line }}"
+        state: present
+        backup: true
+
+    - name: Configure Nvim Kickstart for Custom Plugins Extras
       ansible.builtin.copy:
         dest: "{{ ansible_env.HOME }}/.config/nvim/lua/custom/plugins/extras.lua"
         content: |
