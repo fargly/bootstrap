@@ -91,3 +91,10 @@
       ansible.builtin.file:
         path: "{{ nvim_tempfile.path }}"
         state: absent
+
+    - name: Clone Nvim Kickstart Repo
+      ansible.builtin.git:
+        repo: https://github.com/nvim-lua/kickstart.nvim.git
+        dest: "{{ ansible_env.HOME }}/.config/nvim"
+        update: true
+      # noqa: latest
