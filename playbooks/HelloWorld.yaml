@@ -1,0 +1,13 @@
+## Check if ansible_product_name = "Chell"
+## If yes, Clone git repo: 'https://github.com/WeirdTreeThing/chromebook-linux-audio' into ~/.local/opt
+## Run ./setup-audio from chromebook-linux-audio
+---
+- name: Setup Chromebook Linux Audio for Chell
+  hosts: localhost
+  gather_facts: true
+
+  tasks:
+
+    - name: Hello World
+      ansible.builtin.debug:
+        msg: "Hello, World!"
