@@ -31,6 +31,7 @@ playbooks_list: List[str] = [
     "AdditionalPackages.yaml",
     "AddConformUsers.yaml",
     "SuspendViaSSH.yaml",
+    "tailscale.yaml",
 ]
 
 playbooks: List[str] = [f"{playbookdirectory}/{pb}" for pb in playbooks_list]
