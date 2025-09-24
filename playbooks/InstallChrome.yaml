@@ -1,0 +1,34 @@
+---
+- name: Idempotent Installation of a local Google Chrome package
+  hosts: localhost
+  become: true
+  vars:
+    package_name_to_check: "google-chrome-stable"
+    package_url: "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+    package_dest: "/tmp/google-chrome-stable.deb"
+  tasks:
+    - name: Check if the package is already installed
+      ansible.builtin.command: dpkg-query -W "{{ package_name_to_check }}"
+      register: dpkg_check
+      ignore_errors: yes
+      changed_when: false
+
+    - name: Download the .deb package only if not installed
+      ansible.builtin.get_url:
+        url: "{{ package_url }}"
+        dest: "{{ package_dest }}"
+        mode: '0644'
+      when: dpkg_check.rc != 0
+
+    - name: Install the downloaded .deb package
+      ansible.builtin.package:
+        name: "{{ package_dest }}"
+        state: present
+      when: dpkg_check.rc != 0
+
+    - name: Remove the downloaded .deb file
+      ansible.builtin.file:
+        path: "{{ package_dest }}"
+        state: absent
+      when: dpkg_check.rc != 0
+
