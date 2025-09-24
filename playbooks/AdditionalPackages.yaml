@@ -27,6 +27,7 @@
           - gnome-tweaks
           - python3-pip
           - wl-clipboard
+          - flatpak
 
       when: not ansible_os_family == 'Darwin'
 
