@@ -27,4 +27,5 @@
           - gnome-tweaks
           - python3-pip
           - eza
+          - btop
       when: not ansible_os_family == 'Darwin'
