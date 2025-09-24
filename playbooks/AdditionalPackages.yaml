@@ -26,6 +26,7 @@
           - gnome-shell-extension-manager
           - gnome-tweaks
           - python3-pip
-          - eza
-          - btop
+          - wl-clipboard
+
       when: not ansible_os_family == 'Darwin'
+
