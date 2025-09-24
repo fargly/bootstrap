@@ -28,6 +28,7 @@
           - python3-pip
           - wl-clipboard
           - flatpak
+          - autofs
 
       when: not ansible_os_family == 'Darwin'
 
