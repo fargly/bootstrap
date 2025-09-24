@@ -1,0 +1,22 @@
+---
+- name: Home Directory Extension
+  hosts: localhost
+
+  tasks:
+    - name: Update cache and upgrade packages using generic package manager
+      tags: privileged
+      become: true
+      ansible.builtin.package:
+        upgrade: true
+        update_cache: true
+      when: not ansible_os_family == 'Darwin'
+
+    - name: Install package
+      tags: privileged
+      become: true
+      ansible.builtin.package:
+        name: "autofs"
+      when: not ansible_os_family == 'Darwin'
+
+    #mysubdir -o bind UUID=12345678-abcd-1234-abcd-1234567890ab:/home/user/source_directory
+
