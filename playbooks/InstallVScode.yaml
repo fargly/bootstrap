@@ -26,6 +26,27 @@
       ansible.builtin.debug:
         msg: "VSCode installed: {{ vscode_is_installed }}"
 
+    - name: Import Microsoft GPG key
+      # Note: The key is imported via the `apt_key` module from a URL.
+      # While `apt_key` is considered deprecated in favor of `signed-by` with
+      # `apt_repository`, it is still the common and simple method for the MS key.
+      # Ensure you check the official Microsoft documentation for the latest
+      # recommended method.
+      ansible.builtin.apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+
+    - name: Add the VSCode repository
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+        state: present
+        update_cache: true
+
+    - name: Install VSCode (optional, but common follow-up)
+      ansible.builtin.apt:
+        name: code
+        state: present
+
 #     - name: Download the .deb package only if not installed
 #       ansible.builtin.get_url:
 #         url: "{{ package_url }}"
