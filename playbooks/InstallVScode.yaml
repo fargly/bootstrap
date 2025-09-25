@@ -1,7 +1,7 @@
 ---
 - name: Idempotent Installation of a Microsoft Repo Key, Repo, and VSCode
   hosts: localhost
-  gather_facts: false
+  gather_facts: true
 
   vars:
     package_name_to_check: "code"
