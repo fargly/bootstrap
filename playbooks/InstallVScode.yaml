@@ -49,6 +49,7 @@
     #     state: present
 
     - name: Download the Microsoft GPG key for VSCode
+      become: true
       ansible.builtin.get_url:
         url: https://packages.microsoft.com/keys/microsoft.asc
         dest: /usr/share/keyrings/microsoft-vscode-keyring.gpg
