@@ -67,6 +67,7 @@
         mode: '0644'
 
     - name: De-Armor the GPG key and place it in the keyrings directory
+      become: true
       ansible.builtin.command: >
         gpg --dearmor -o /usr/share/keyrings/microsoft-vscode-keyring.gpg /tmp/microsoft.asc
       args:
