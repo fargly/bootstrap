@@ -100,10 +100,10 @@
       tags: privileged
       when: not ansible_os_family == 'Darwin' and not vscode_is_installed
 
-    # - name: Install VSCode package
-    #   ansible.builtin.apt:
-    #     name: code
-    #     state: present
+    - name: Install VSCode package
+      ansible.builtin.apt:
+        name: code
+        state: present
 
 
 #     - name: Download the .deb package only if not installed
