@@ -24,8 +24,7 @@
 
     - name: VSCode status
       ansible.builtin.debug:
-        msg: "VSCode is already installed."
-      when: vscode_is_installed
+        msg: "VSCode installed: {{ vscode_is_installed }}"
 
 #     - name: Download the .deb package only if not installed
 #       ansible.builtin.get_url:
