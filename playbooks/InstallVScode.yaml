@@ -12,6 +12,7 @@
     - name: Gather package facts
       ansible.builtin.package_facts:
         manager: auto
+      no_log: true
 
     - name: Set a default fact for vscode_is_installed
       ansible.builtin.set_fact:
