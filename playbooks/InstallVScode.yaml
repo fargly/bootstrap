@@ -9,6 +9,10 @@
     package_dest: "/tmp/google-chrome-stable_current_amd64.deb"
 
   tasks:
+    - name: End if Host is not Ubuntu
+      ansible.builtin.meta: end_play
+      when: not ansible_distribution == "Ubuntu"
+
     - name: Gather package facts
       ansible.builtin.package_facts:
         manager: auto
@@ -54,18 +58,28 @@
         url: https://packages.microsoft.com/keys/microsoft.asc
         dest: /usr/share/keyrings/microsoft-vscode-keyring.gpg
         mode: '0644'
+      when: not vscode_is_installed
 
-    # - name: Add the VSCode repository in deb822 format
-    #   ansible.builtin.deb822_repository:
-    #     name: vscode
-    #     types: [deb]
-    #     uris: https://packages.microsoft.com/repos/vscode
-    #     suites: [stable]
-    #     components: [main]
-    #     signed_by: /usr/share/keyrings/microsoft-vscode-keyring.gpg
-    #     state: present
-    #     enabled: true
-    #     update_cache: true
+    - name: Add the VSCode repository in deb822 format
+      become: true
+      ansible.builtin.deb822_repository:
+        name: vscode
+        types: [deb]
+        uris: https://packages.microsoft.com/repos/vscode
+        suites: [stable]
+        components: [main]
+        signed_by: /usr/share/keyrings/microsoft-vscode-keyring.gpg
+        state: present
+        enabled: true
+      when: not vscode_is_installed
+
+    - name: Update cache and upgrade packages using generic package manager
+      become: true
+      ansible.builtin.package:
+        upgrade: true
+        update_cache: true
+      tags: privileged
+      when: not ansible_os_family == 'Darwin' and not vscode_is_installed
 
     # - name: Install VSCode package
     #   ansible.builtin.apt:
