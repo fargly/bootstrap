@@ -54,8 +54,6 @@ def run_playbooks():
 
         # command = ["ansible-playbook", playbook] + common_options
         command = [
-            # "/home/fargly/.local/bin/ansible-playbook",
-            # f"{os.getenv('HOME')}/.local/bin/ansible-playbook",
             f"{os.getenv('HOME')}/.local/bin/uvx",
             "--from",
             "ansible-core",
@@ -89,7 +87,7 @@ def run_playbooks():
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print(f"Usage: {sys.argv[0]} <EscalationPassword> <VaultPassword>")
+        print(f"Usage: {sys.argv[0]} <EscalationPasswordFile> <VaultPasswordFile>")
         pass
     else:
         run_playbooks()
