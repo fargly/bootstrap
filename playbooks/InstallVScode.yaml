@@ -101,6 +101,7 @@
       when: not ansible_os_family == 'Darwin' and not vscode_is_installed
 
     - name: Install VSCode package
+      become: true
       ansible.builtin.apt:
         name: code
         state: present
