@@ -31,35 +31,6 @@
       ansible.builtin.debug:
         msg: "VSCode installed: {{ vscode_is_installed }}"
 
-    # - name: Import Microsoft GPG key
-    #   # Note: The key is imported via the `apt_key` module from a URL.
-    #   # While `apt_key` is considered deprecated in favor of `signed-by` with
-    #   # `apt_repository`, it is still the common and simple method for the MS key.
-    #   # Ensure you check the official Microsoft documentation for the latest
-    #   # recommended method.
-    #   ansible.builtin.apt_key:
-    #     url: https://packages.microsoft.com/keys/microsoft.asc
-    #     state: present
-
-    # - name: Add the VSCode repository
-    #   ansible.builtin.apt_repository:
-    #     repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
-    #     state: present
-    #     update_cache: true
-
-    # - name: Install VSCode (optional, but common follow-up)
-    #   ansible.builtin.apt:
-    #     name: code
-    #     state: present
-
-    # - name: Download the Microsoft GPG key for VSCode
-    #   become: true
-    #   ansible.builtin.get_url:
-    #     url: https://packages.microsoft.com/keys/microsoft.asc
-    #     dest: /usr/share/keyrings/microsoft-vscode-keyring.gpg
-    #     mode: '0644'
-    #   when: not vscode_is_installed
-
     - name: Download the Microsoft GPG key (ASCII Armored)
       ansible.builtin.get_url:
         url: https://packages.microsoft.com/keys/microsoft.asc
@@ -105,47 +76,3 @@
       ansible.builtin.apt:
         name: code
         state: present
-
-
-#     - name: Download the .deb package only if not installed
-#       ansible.builtin.get_url:
-#         url: "{{ package_url }}"
-#         dest: "{{ package_dest }}"
-#         mode: '0644'
-#       when: not chrome_is_installed
-#
-#     - name: Install the downloaded .deb package
-#       become: true
-#       ansible.builtin.command: "apt install {{ package_dest }}"
-#       when: not chrome_is_installed
-#
-#     - name: Remove the downloaded .deb file
-#       ansible.builtin.file:
-#         path: "{{ package_dest }}"
-#         state: absent
-#
-#     - name: Set Chrome as Default Browser
-#       ansible.builtin.command: xdg-settings set default-web-browser google-chrome.desktop
-#
-#
-#
-# #!/bin/bash
-#
-# cd /tmp
-# wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >packages.microsoft.gpg
-# sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
-# echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] \
-# https://packages.microsoft.com/repos/code stable main" | sudo tee /etc/apt/sources.list.d/vscode.list >/dev/null
-# rm -f packages.microsoft.gpg
-# cd -
-#
-# sudo apt update -y
-# sudo apt install -y code
-#
-# mkdir -p ~/.config/Code/User
-# cp ~/.local/share/omakub/configs/vscode.json ~/.config/Code/User/settings.json
-#
-# # Install default supported themes
-# code --install-extension enkia.tokyo-night
-#
-#
