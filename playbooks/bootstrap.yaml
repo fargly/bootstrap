@@ -86,7 +86,7 @@
         dest: "{{ ansible_env.HOME }}/.local/bin/ansible-playbook"
         content: |
           #!/usr/bin/env bash
-          uvx --from ansible-core ansible-playbook $@
+          uvx --from ansible-core  --with python-debian ansible-playbook $@
 
           ## EOF
         mode: "0755"
@@ -96,7 +96,7 @@
         dest: "{{ ansible_env.HOME }}/.local/bin/ansible-playbook-noprivilege"
         content: |
           #!/usr/bin/env bash
-          uvx --from ansible-core ansible-playbook  --skip-tags "privileged" $@
+          uvx --from ansible-core  --with python-debian ansible-playbook  --skip-tags "privileged" $@
 
           ## EOF
         mode: "0755"
@@ -106,7 +106,7 @@
         dest: "{{ ansible_env.HOME }}/.local/bin/ansible-playbook-privilege"
         content: |
           #!/usr/bin/env bash
-          uvx --from ansible-core ansible-playbook --ask-become-pass $@
+          uvx --from ansible-core  --with python-debian ansible-playbook --ask-become-pass $@
 
           ## EOF
         mode: "0755"
@@ -117,7 +117,7 @@
         content: |
           #!/usr/bin/env bash
           ## Note: You may need to add '--ask-vault-pass' in bootstrapping mode
-          uvx --from ansible-core ansible-vault $@
+          uvx --from ansible-core  --with python-debian ansible-vault $@
 
           ## EOF
         mode: "0755"
@@ -127,7 +127,7 @@
         dest: "{{ ansible_env.HOME }}/.local/bin/ansible-galaxy"
         content: |
           #!/usr/bin/env bash
-          uvx --from ansible-core ansible-galaxy $@
+          uvx --from ansible-core  --with python-debian ansible-galaxy $@
 
           ## EOF
         mode: "0755"
