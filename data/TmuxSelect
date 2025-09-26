@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+## Clean Sessions
+# tmux list-sessions -F '#{session_name}' | grep -- '-' | xargs -I{} tmux kill-session -t {}
+
+
+## Choose Session Function
+function ChooseExisting  {
+    #session_choice=$(printf "NEW SESSION\n%s" "$sessions" | fzf --prompt="Select a tmux session or create new: ")
+    #session_choice=$(printf "%s\nNEW SESSION" "$sessions" | fzf --prompt="Select a tmux session or create new: ")
+    session_choice=$(printf "%s\nNEW SESSION" "$sessions" | fzf --no-sort --prompt="Select a tmux session or create new: ")
+
+    # Handle user's choice
+    case "$session_choice" in
+        "NEW SESSION")
+            tmux new -s "default"
+            ;;
+        "")
+            echo "No session selected. Exiting."
+            exit 0
+            ;;
+        *)
+            if [ -n "$TMUX" ]; then
+                tmux switch-client -t "$session_choice"
+            else
+                tmux attach-session -t "$session_choice"
+            fi
+            ;;
+    esac
+
+}
+
+## Get List of Sessions
+sessions=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | sort -r)
+
+## Invoke New Session if No Sessions Exist
+test -z "$sessions" && tmux new-session -s "default" || ChooseExisting
+
+
+
+## EOF
+
+
