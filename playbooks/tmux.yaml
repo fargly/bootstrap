@@ -6,6 +6,9 @@
   hosts: localhost
   gather_facts: true
 
+  vars:
+    tmux_config_patch: "{{ playbook_dir }}/../data/tmux-conf-local.patch"
+
   tasks:
     - name: Update apt cache and upgrade packages
       become: true
@@ -50,7 +53,11 @@
         dest: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf.local"
         mode: '0600'
 
+    - name: Check variables
+      ansible.builtin.debug:
+        msg: "tmux_config_patch: {{ tmux_config_patch }}"
+
     - name: Apply patch to one file
       ansible.posix.patch:
-        src: tmux-conf-local.patch
+        src: "{{ tmux_config_patch }}"
         dest: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf.local"
