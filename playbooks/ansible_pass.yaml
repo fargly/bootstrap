@@ -7,7 +7,7 @@
   connection: local # Or ssh if setting up remotely
 
   vars_files:
-    - secrets.yaml.vault # This line tells Ansible to load variables from vault.yml
+    - "{{ playbook_dir }}/../data/secrets.yaml.vault"
 
   tasks:
     - name: Create .vault_pass.txt file

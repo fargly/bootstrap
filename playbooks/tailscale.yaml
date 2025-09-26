@@ -5,7 +5,7 @@
   gather_facts: true
 
   vars_files:
-    - secrets.yaml.vault
+    - "{{ playbook_dir }}/../data/secrets.yaml.vault"
 
   vars:
     tailscale_binary_path: "/usr/bin"

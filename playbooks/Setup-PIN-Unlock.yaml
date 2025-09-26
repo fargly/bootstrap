@@ -4,7 +4,7 @@
   gather_facts: true
 
   vars_files:
-    - secrets.yaml.vault # This line tells Ansible to load variables from vault.yml
+    - "{{ playbook_dir }}/../data/secrets.yaml.vault"
 
   tasks:
     - name: Update cache and upgrade packages using generic package manager
