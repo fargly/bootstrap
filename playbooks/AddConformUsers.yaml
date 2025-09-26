@@ -5,7 +5,7 @@
   become: true
 
   vars_files:
-    - secrets.yaml.vault
+    - "{{ playbook_dir }}/../data/secrets.yaml.vault"
 
   tasks:
     - name: End the play on hosts that are not Linux
