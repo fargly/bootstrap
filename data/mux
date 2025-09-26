@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-## Session Cleaning
-# tmux list-sessions -F '#{session_name}' | grep -- '-' | xargs -I{} tmux kill-session -t {}
-
-pgrep tmux > /dev/null || (tmux new -d -s delete-me && tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh && tmux kill-session -t delete-me)
+pgrep tmux >/dev/null || (
+  tmux new -d -s delete-me
+  tmux run-shell $HOME/.config/tmux/plugins/tmux-resurrect/scripts/restore.sh
+  tmux kill-session -t delete-me
+)
 
 TmuxSelect
-#byobu
 
 ## EOF
-

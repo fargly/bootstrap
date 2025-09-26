@@ -8,6 +8,8 @@
 
   vars:
     tmux_config_patch: "{{ playbook_dir }}/../data/tmux-conf-local.patch"
+    tmux_session_start_script: "{{ playbook_dir }}/../data/mux"
+    tmux_session_select_script: "{{ playbook_dir }}/../data/TmuxSelect"
 
   tasks:
     - name: Update apt cache and upgrade packages
@@ -61,3 +63,15 @@
       ansible.posix.patch:
         src: "{{ tmux_config_patch }}"
         dest: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf.local"
+
+    - name: Copy in Tmux session start script
+      ansible.builtin.copy:
+        src: "{{ tmux_session_start_script }}"
+        dest: "{{ ansible_env.HOME }}/.local/bin/mux"
+        mode: '0755'
+
+    - name: Copy in Tmux session select script
+      ansible.builtin.copy:
+        src: "{{ tmux_session_select_script }}"
+        dest: "{{ ansible_env.HOME }}/.local/bin/TmuxSelect"
+        mode: '0755'

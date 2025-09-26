@@ -1,13 +1,7 @@
 #!/usr/bin/env bash
 
-## Clean Sessions
-# tmux list-sessions -F '#{session_name}' | grep -- '-' | xargs -I{} tmux kill-session -t {}
-
-
 ## Choose Session Function
 function ChooseExisting  {
-    #session_choice=$(printf "NEW SESSION\n%s" "$sessions" | fzf --prompt="Select a tmux session or create new: ")
-    #session_choice=$(printf "%s\nNEW SESSION" "$sessions" | fzf --prompt="Select a tmux session or create new: ")
     session_choice=$(printf "%s\nNEW SESSION" "$sessions" | fzf --no-sort --prompt="Select a tmux session or create new: ")
 
     # Handle user's choice
