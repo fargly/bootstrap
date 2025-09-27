@@ -94,6 +94,7 @@
 
           ##################################################
           ##### Tmux Bash Completion Source ################
+          source {{ ansible_env.HOME }}/.local/share/scop-bash-completion/bash_completion
           source {{ ansible_env.HOME }}/.local/share/scop-bash-completion/completions/tmux
 
       ansible.builtin.blockinfile:
