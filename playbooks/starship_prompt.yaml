@@ -92,7 +92,11 @@
           eval "$({{ ansible_env.HOME }}/.local/bin/starship init bash)"
           eval "$({{ ansible_env.HOME }}/.local/bin/starship completions bash)"
 
+          ##################################################
+          ##### Tmux Bash Completion Source ################
+
       ansible.builtin.blockinfile:
         path: "{{ ansible_env.HOME }}/.bashrc"
         insertafter: EOF
         block: "{{ config_block }}"
+

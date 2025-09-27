@@ -80,6 +80,14 @@
         update: true
       # noqa: latest
 
+    - name: Clone Scop bash-completion Repository
+      ansible.builtin.git:
+        repo: https://github.com/scop/bash-completion.git
+        dest: "{{ ansible_env.HOME }}/.local/share/scop-bash-completion"
+        accept_hostkey: true
+        update: true
+      # noqa: latest
+
     ## Create Local uvx based Ansible Tooling
     - name: Create ansible-playbook script
       ansible.builtin.copy:
@@ -151,3 +159,4 @@
           set -o vi
           export EDITOR=vim
           export PATH="$HOME/.local/bin:$PATH"
+
