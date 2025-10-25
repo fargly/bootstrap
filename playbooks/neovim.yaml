@@ -49,7 +49,7 @@
         download_uri: >-
           {{ "https://github.com/neovim/neovim/releases/latest/download/" +
           "nvim-" + system2nvimsystem[ansible_facts.system] + "-" +
-          {{ deb_architecture[ansible_facts.architecture] }} + ".tar.gz"
+          deb_architecture[ansible_facts.architecture] + ".tar.gz"
           }}
 
     - name: Check if nvim binary exists
