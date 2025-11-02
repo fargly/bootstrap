@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+
+## Push Refreshed Environment into Every Existing Tmux Pane
+##------------------------------------------------------------------- ENVMAN_LOAD Must be Unset for ENV.env to be Resolved
+tmux list-panes -s -F "#{pane_id}" | xargs -I{} tmux send-keys -t {} "ENVMAN_LOAD=''; source ~/.bashrc" C-m
+
+
+## EOF
+
+
