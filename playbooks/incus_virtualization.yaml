@@ -16,7 +16,7 @@
       ansible.builtin.package:
         upgrade: true
         update_cache: true
-      when: not ansible_os_family == 'Darwin'
+      when: not ansible_facts["os_family"] == 'Darwin'
 
     - name: Install package(s)
       become: true
@@ -27,7 +27,7 @@
         packages:
           - incus
           - qemu-system
-      when: not ansible_os_family == 'Darwin'
+      when: not ansible_facts["os_family"] == 'Darwin'
 
     - name: Add incus_user to the incus-admin group
       become: true

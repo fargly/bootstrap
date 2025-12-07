@@ -13,7 +13,7 @@
         upgrade: true
         update_cache: true
       tags: privileged
-      when: not ansible_os_family == 'Darwin'
+      when: not ansible_facts["os_family"] == 'Darwin'
 
     - name: Install packages
       become: true
@@ -24,7 +24,7 @@
           - libpam-pwdfile
           - whois
       tags: privileged
-      when: not ansible_os_family == 'Darwin'
+      when: not ansible_facts["os_family"] == 'Darwin'
 
     - name: Write PIN Password to file
       become: true

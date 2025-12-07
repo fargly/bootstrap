@@ -11,7 +11,7 @@
   tasks:
     - name: End if Host is not Ubuntu
       ansible.builtin.meta: end_play
-      when: not ansible_distribution == "Ubuntu"
+      when: not ansible_facts["distribution"] == "Ubuntu"
 
     - name: Gather package facts
       ansible.builtin.package_facts:
@@ -69,7 +69,7 @@
         upgrade: true
         update_cache: true
       tags: privileged
-      when: not ansible_os_family == 'Darwin' and not vscode_is_installed
+      when: not ansible_facts["os_family"] == 'Darwin' and not vscode_is_installed
 
     - name: Install VSCode package
       become: true

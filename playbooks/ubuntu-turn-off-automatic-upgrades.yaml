@@ -10,7 +10,7 @@
         name: unattended-upgrades
         state: present
         update_cache: true
-      when: ansible_os_family == "Debian" # Only run for Debian-based systems like Ubuntu
+      when: ansible_facts["os_family"] == "Debian" # Only run for Debian-based systems like Ubuntu
 
     - name: Disable automatic updates by commenting out relevant lines in 20auto-upgrades
       ansible.builtin.lineinfile:
@@ -22,7 +22,7 @@
         state: present
       notify: Restart unattended-upgrades service
       # Ensure this task only runs if the file exists and is relevant to Ubuntu's update mechanism
-      when: ansible_os_family == "Debian"
+      when: ansible_facts["os_family"] == "Debian"
 
     - name: Create or update a custom configuration file to explicitly disable automatic updates
       ansible.builtin.copy:
@@ -34,7 +34,7 @@
         owner: root
         group: root
       notify: Restart unattended-upgrades service
-      when: ansible_os_family == "Debian"
+      when: ansible_facts["os_family"] == "Debian"
 
     - name: Stop and disable the unattended-upgrades service
       ansible.builtin.systemd:
@@ -42,7 +42,7 @@
         state: stopped
         enabled: no
       ignore_errors: true
-      when: ansible_os_family == "Debian"
+      when: ansible_facts["os_family"] == "Debian"
 
   handlers:
     - name: Restart unattended-upgrades service
@@ -50,5 +50,5 @@
         name: unattended-upgrades
         state: restarted
       listen: "Restart unattended-upgrades service" # This handler will only be triggered by the notify keyword
-      when: ansible_os_family == "Debian"
+      when: ansible_facts["os_family"] == "Debian"
 

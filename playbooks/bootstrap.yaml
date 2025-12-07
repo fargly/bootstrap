@@ -13,7 +13,7 @@
         upgrade: true
         update_cache: true
       tags: privileged
-      when: not ansible_os_family == 'Darwin'
+      when: not ansible_facts["os_family"] == 'Darwin'
 
     - name: Install packages
       become: true
@@ -32,7 +32,7 @@
           - tmux
           - unzip
       tags: privileged
-      when: not ansible_os_family == 'Darwin'
+      when: not ansible_facts["os_family"] == 'Darwin'
 
     - name: Check if the community.general collection is already installed
       ansible.builtin.command:

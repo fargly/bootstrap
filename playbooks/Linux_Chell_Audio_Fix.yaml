@@ -1,4 +1,4 @@
-## Check if ansible_product_name = "Chell"
+## Check if ansible_facts["product_name"] = "Chell"
 ## If yes, Clone git repo: 'https://github.com/WeirdTreeThing/chromebook-linux-audio' into ~/.local/opt
 ## Run ./setup-audio from chromebook-linux-audio
 ---
@@ -12,7 +12,7 @@
 
     - name: End if Host is not Chell Architecture Chromebook
       ansible.builtin.meta: end_play
-      when: not ansible_product_name == "Chell"
+      when: not ansible_facts["product_name'] == "Chell"
 
     - name: Ensure .local/opt directory exists
       ansible.builtin.file:

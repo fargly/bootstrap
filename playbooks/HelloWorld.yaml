@@ -1,4 +1,4 @@
-## Check if ansible_product_name = "Chell"
+## Check if ansible_facts["product_name"] = "Chell"
 ## If yes, Clone git repo: 'https://github.com/WeirdTreeThing/chromebook-linux-audio' into ~/.local/opt
 ## Run ./setup-audio from chromebook-linux-audio
 ---
@@ -10,4 +10,4 @@
 
     - name: Hello World
       ansible.builtin.debug:
-        msg: "Hello, World!"
+        msg: "Hello, World!: {{ ansible_facts['product_name'] }}"
