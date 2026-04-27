@@ -47,9 +47,7 @@
     - name: Set Direct Download URI
       ansible.builtin.set_fact:
         download_uri: >-
-          {{ "https://github.com/neovim/neovim/releases/latest/download/" +
-          "nvim-" + system2nvimsystem[ansible_facts.system] + "-" +
-          deb_architecture[ansible_facts.architecture] + ".tar.gz"
+          {{ "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz"
           }}
 
     - name: Check if nvim binary exists
