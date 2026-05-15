@@ -19,3 +19,9 @@ I'm not currently in an Enterprise environment so bootstrapping is very PULL ori
 * All tasks in bootstrap hierarchy that require privilege are tagged 'privileged'. You may issue a '--skip-tags "privileged"' argument to run all tasks in a playbook that don't require privilege.
 * Every Effort is Made to Use Sane Defaults on a Raw System Install
 
+### Ubuntu 26.04 Issue: sudo-rs not compatible with Ansible
+#### Current Mitigation
+1. Install sudo: 'sudo apt install sudo'
+2. Run 'sudo update-alternatives --config sudo', Select 'legacy' instead of 'sudo-rs'
+3. Ansible will function correctly
+Note: Tested newest version of Ansible (ansible 13.6.0/ansible-compat 25.12.0/ansible-core 2.20.5/ansible-lint 25.12.0)
