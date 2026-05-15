@@ -16,6 +16,4 @@ sudo update-alternatives --set sudo /usr/bin/sudo.ws
  wget -O- https://raw.githubusercontent.com/fargly/bootstrap/main/playbooks/bootstrap.yaml | \
     $HOME/.local/bin/uvx --from ansible-core ansible-playbook --ask-become-pass /dev/stdin
 
-echo "You will need to run 'sudo update-alternatives --config sudo' and select legacy sudo"
-
 ## EOF
