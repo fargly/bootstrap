@@ -8,6 +8,9 @@ mkdir -p $HOME/.local/bin
 # 'uv' Install ############################################################# #
 wget -O- https://astral.sh/uv/install.sh | sh
 
+# 'sudo' Install ########################################################### #
+sudo apt install -y sudo
+
 # Run Ansible Bootstrap Playbook ########################################### #
  wget -O- https://raw.githubusercontent.com/fargly/bootstrap/main/playbooks/bootstrap.yaml | \
     $HOME/.local/bin/uvx --from ansible-core ansible-playbook --ask-become-pass /dev/stdin
