@@ -10,6 +10,7 @@ wget -O- https://astral.sh/uv/install.sh | sh
 
 # 'sudo' Install ########################################################### #
 sudo apt install -y sudo
+sudo update-alternatives --set sudo /usr/bin/sudo.ws
 
 # Run Ansible Bootstrap Playbook ########################################### #
  wget -O- https://raw.githubusercontent.com/fargly/bootstrap/main/playbooks/bootstrap.yaml | \
