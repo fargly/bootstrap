@@ -2,6 +2,10 @@
 
 # Minimal Bootstrapping Sequence To Launch Ansible Playbook ################ #
 
+# --------- Manage Current Stable Ansible Breakage for sudo-rs on Ubuntu 26.04 and Others -------- #
+which sudo.ws 2>/dev/null >/dev/null && export ANSIBLE_BECOME_EXE=sudo.ws
+
+
 # Add ~/.local/bin Directory ############################################### #
 mkdir -p $HOME/.local/bin
 
