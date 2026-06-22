@@ -158,6 +158,8 @@
         state: present
         line: |
           set -o vi
-          export EDITOR=vim
+          export EDITOR=nvim
           export PATH="$HOME/.local/bin:$PATH"
+          which sudo.ws 2>/dev/null >/dev/null && export ANSIBLE_BECOME_EXE=sudo.ws
+
 
